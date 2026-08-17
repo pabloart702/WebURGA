@@ -1,0 +1,22 @@
+{
+  "name": "weburga",
+  "version": "1.0.0",
+  "description": "Site oficial da URGA",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node --watch src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pabloart702/WebURGA.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/pabloart702/WebURGA/issues"
+  },
+  "homepage": "https://github.com/pabloart702/WebURGA#readme"
+}
