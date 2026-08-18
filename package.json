@@ -2,21 +2,26 @@
   "name": "weburga",
   "version": "1.0.0",
   "description": "Site oficial da URGA",
-  "main": "src/app.js",
+  "main": "src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node --watch src/app.js"
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pabloart702/WebURGA.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "PabloArthur",
   "license": "ISC",
   "type": "module",
   "bugs": {
     "url": "https://github.com/pabloart702/WebURGA/issues"
   },
-  "homepage": "https://github.com/pabloart702/WebURGA#readme"
+  "homepage": "https://github.com/pabloart702/WebURGA#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "swagger-jsdoc": "^6.3.0",
+    "swagger-ui-express": "^5.0.1"
+  }
 }
