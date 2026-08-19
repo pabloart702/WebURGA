@@ -1,8 +1,7 @@
-import express from 'express';
-import { PORT_HOST } from './env.js'
-const app = express();
+import app from './app.js'
+import 'dotenv/config';
 
-const PORT = PORT_HOST;
+const PORT = process.env.PORT_HOST;
 app.listen(PORT, () => {
     console.log(`API online`);
 })
