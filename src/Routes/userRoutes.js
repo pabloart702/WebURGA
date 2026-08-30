@@ -1,12 +1,9 @@
 import { Router } from "express";
-import { 
-    listUsers, 
-    searchUserForId, 
-    createUser, 
-    updateUser, 
-    deleteUser 
-} from "../Controllers/userControllers.js";
-import { userValidator, userUpdateValidator } from "../Validators/userValidator.js";
+import UserController from "../Controllers/userControllers.js";
+import { createUserValidator, updateUserValidator } from "../Validators/userValidator.js";
+import { authMiddleware } from "../Middlewares/authMiddleware.js";
+import { authorize } from "../Middlewares/permissionMiddleware.js";
+import { validateRequest } from "../Middlewares/errorMiddleware.js";
 
 const router = Router();
 
@@ -57,7 +54,7 @@ const router = Router();
  *               items:
  *                 $ref: '#/components/schemas/User'
  */
-router.get("/", listUsers);
+router.get("/", authMiddleware, authorize('ADMINISTRADOR'), UserController.listUsers);
 
 /**
  * @swagger
@@ -82,7 +79,7 @@ router.get("/", listUsers);
  *       404:
  *         description: Usuário não encontrado
  */
-router.get("/:id", searchUserForId);
+router.get("/id/:id", authMiddleware, authorize('ADMINISTRADOR'), UserController.searchUserForId);
 
 /**
  * @swagger
@@ -109,12 +106,12 @@ router.get("/:id", searchUserForId);
  *             schema:
  *               $ref: '#/components/schemas/User'
  */
-router.post("/", userValidator, createUser);
+router.post("/", authMiddleware, authorize('ADMINISTRADOR'), createUserValidator, validateRequest, UserController.createUser);
 
 /**
  * @swagger
  * /users/{id}:
- *   put:
+ *   patch:
  *     summary: Atualiza os dados de um usuário pelo ID
  *     tags: [Users]
  *     parameters:
@@ -145,7 +142,7 @@ router.post("/", userValidator, createUser);
  *       404:
  *         description: Usuário não encontrado
  */
-router.put("/:id", userUpdateValidator, updateUser);
+router.patch("/id/:id", authMiddleware, authorize('USUÁRIO', 'ADMINISTRADOR'), updateUserValidator, validateRequest, UserController.updateUser);
 
 /**
  * @swagger
@@ -175,6 +172,6 @@ router.put("/:id", userUpdateValidator, updateUser);
  *       404:
  *         description: Usuário não encontrado
  */
-router.delete("/:id", deleteUser);
+router.delete("/id/:id", authMiddleware, authorize('ADMINISTRADOR'), UserController.deleteUser);
 
 export default router;

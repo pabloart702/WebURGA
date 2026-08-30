@@ -1,12 +1,10 @@
 import { Router } from "express";
-import { 
-    listApoios, 
-    searchApoioForId, 
-    createApoio, 
-    updateApoio, 
-    deleteApoio 
-} from "../Controllers/apoioControllers.js";
-import { apoioValidator, apoioUpdateValidator } from "../Validators/apoioValidator.js";
+import formsController from "../Controllers/formsControllers.js";
+import { CreateFormsValidator, UpdateFormsValidator } from "../Validators/formsValidator.js";
+import { authMiddleware } from "../Middlewares/authMiddleware.js";
+import { authorize } from "../Middlewares/permissionMiddleware.js";
+import { validateRequest } from "../Middlewares/errorMiddleware.js";
+
 
 const router = Router();
 
@@ -14,7 +12,7 @@ const router = Router();
  * @swagger
  * components:
  *   schemas:
- *     Apoio:
+ *     Forms:
  *       type: object
  *       required:
  *         - titulo
@@ -22,16 +20,16 @@ const router = Router();
  *       properties:
  *         id:
  *           type: number
- *           description: O ID gerado automaticamente para a solicitação
+ *           description: O ID gerado automaticamente para o formulário
  *         titulo:
  *           type: string
- *           description: Título da solicitação de apoio
+ *           description: Título do formulário
  *         descricao:
  *           type: string
- *           description: Descrição da solicitação
+ *           description: Descrição do formulário
  *         status:
  *           type: string
- *           description: Status da solicitação (pendente, aprovado, cancelado)
+ *           description: Status do formulário (pendente, aprovado, cancelado)
  *       example:
  *         id: 1693000000000
  *         titulo: Suporte TI
@@ -42,59 +40,59 @@ const router = Router();
 /**
  * @swagger
  * tags:
- *   name: Apoios
- *   description: API para gerenciamento de solicitações de apoio
+ *   name: Forms
+ *   description: API para gerenciamento de formulários
  */
 
 /**
  * @swagger
- * /apoios:
+ * /forms:
  *   get:
- *     summary: Retorna a lista de todas as solicitações de apoio
- *     tags: [Apoios]
+ *     summary: Retorna a lista de todos os formulários
+ *     tags: [Forms]
  *     responses:
  *       200:
- *         description: A lista de solicitações
+ *         description: A lista de formulários
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Apoio'
+ *                 $ref: '#/components/schemas/Forms'
  */
-router.get("/", listApoios);
+router.get("/", authMiddleware, authorize('USUÁRIO', 'ADMINISTRADOR'), formsController.listForms);
 
 /**
  * @swagger
- * /apoios/{id}:
+ * /forms/{id}:
  *   get:
- *     summary: Retorna uma solicitação pelo seu ID
- *     tags: [Apoios]
+ *     summary: Retorna um formulário pelo seu ID
+ *     tags: [Forms]
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: integer
  *         required: true
- *         description: O ID da solicitação
+ *         description: O ID do formulário
  *     responses:
  *       200:
- *         description: A solicitação encontrada
+ *         description: O formulário encontrado
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Apoio'
+ *               $ref: '#/components/schemas/Forms'
  *       404:
- *         description: Solicitação não encontrada
+ *         description: Formulário não encontrado
  */
-router.get("/:id", searchApoioForId);
+router.get("/:id", authMiddleware, authorize('USUÁRIO', 'ADMINISTRADOR'), formsController.searchFormsById);
 
 /**
  * @swagger
- * /apoios:
+ * /forms:
  *   post:
- *     summary: Cria uma nova solicitação de apoio
- *     tags: [Apoios]
+ *     summary: Cria um novo formulário
+ *     tags: [Forms]
  *     requestBody:
  *       required: true
  *       content:
@@ -111,27 +109,27 @@ router.get("/:id", searchApoioForId);
  *               descricao: O computador não liga
  *     responses:
  *       201:
- *         description: A solicitação foi criada com sucesso
+ *         description: O formulário foi criado com sucesso
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Apoio'
+ *               $ref: '#/components/schemas/Forms'
  */
-router.post("/", apoioValidator, createApoio);
+router.post("/", authMiddleware, authorize('USUÁRIO', 'ADMINISTRADOR'), CreateFormsValidator, validateRequest, formsController.createForms);
 
 /**
  * @swagger
- * /apoios/{id}:
- *   put:
- *     summary: Atualiza os dados de uma solicitação pelo ID
- *     tags: [Apoios]
+ * /forms/{id}:
+ *   patch:
+ *     summary: Atualiza os dados de um formulário pelo ID
+ *     tags: [Forms]
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: integer
  *         required: true
- *         description: O ID da solicitação
+ *         description: O ID do formulário
  *     requestBody:
  *       required: true
  *       content:
@@ -148,32 +146,32 @@ router.post("/", apoioValidator, createApoio);
  *               descricao: Trocar lâmpada da sala 3
  *     responses:
  *       200:
- *         description: A solicitação foi atualizada com sucesso
+ *         description: O formulário foi atualizado com sucesso
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Apoio'
+ *               $ref: '#/components/schemas/Forms'
  *       404:
- *         description: Solicitação não encontrada
+ *         description: Formulário não encontrado
  */
-router.put("/:id", apoioUpdateValidator, updateApoio);
+router.patch("/:id", authMiddleware, authorize('USUÁRIO', 'ADMINISTRADOR'), UpdateFormsValidator, validateRequest, formsController.updateForms);
 
 /**
  * @swagger
- * /apoios/{id}:
+ * /forms/{id}:
  *   delete:
- *     summary: Cancela uma solicitação pelo ID (Soft Delete)
- *     tags: [Apoios]
+ *     summary: Cancela um formulário pelo ID (Soft Delete)
+ *     tags: [Forms]
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: integer
  *         required: true
- *         description: O ID da solicitação
+ *         description: O ID do formulário
  *     responses:
  *       200:
- *         description: A solicitação foi cancelada com sucesso
+ *         description: O formulário foi cancelado com sucesso
  *         content:
  *           application/json:
  *             schema:
@@ -181,11 +179,11 @@ router.put("/:id", apoioUpdateValidator, updateApoio);
  *               properties:
  *                 mensagem:
  *                   type: string
- *                 apoio:
- *                   $ref: '#/components/schemas/Apoio'
+ *                 forms:
+ *                   $ref: '#/components/schemas/Forms'
  *       404:
- *         description: Solicitação não encontrada
+ *         description: Formulário não encontrado
  */
-router.delete("/:id", deleteApoio);
+router.delete("/:id", authMiddleware, authorize('USUÁRIO', 'ADMINISTRADOR'), formsController.deleteForms);
 
 export default router;

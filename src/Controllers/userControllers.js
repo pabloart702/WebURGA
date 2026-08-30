@@ -1,42 +1,66 @@
-import { users } from '../Config/bd.js';
+import UserService from '../Services/userService.js';
+import { InputUserDTO, UpdateUserDTO } from '../Dtos/userInputDTO.js';
+import outUserDTO from '../Dtos/userOutDTO.js';
 
-export const listUsers = (req, res) => {
-    res.status(200).json(users);
-};
+class UserController {
 
-export const searchUserForId = (req, res) => {
-    const { id } = req.params;
-    const user = users.find(p => p.id === Number(id));
-    if (!user) return res.status(404).json({ mensagem: "Usuário não encontrado" });
-    res.status(200).json(user);
-};
+    static async listUsers(req, res, next) {
+        try {
+            const page = parseInt(req.query.page) || 1;
+            const result = await UserService.findAll(page);
 
-export const createUser = (req, res) => {
-    const newUser = { id: Date.now(), status: "ativo", ...req.body };
-    users.push(newUser);
-    res.status(201).json(newUser);
-};
+            // Mapeia apenas os usuários dentro da propriedade 'data' para o DTO
+            result.data = result.data.map(user => new outUserDTO(user));
 
-export const updateUser = (req, res) => {
-    const { id } = req.params;
-    const index = users.findIndex(p => p.id === Number(id));
+            res.status(200).json(result);
+        } catch (error) {
+            next(error);
+        }
+    };
 
-    if (index === -1) {
-        return res.status(404).json({ mensagem: "Usuário não encontrado" });
-    }
+    static async searchUserForId(req, res, next) {
+        try {
+            const { id } = req.params;
+            const user = await UserService.findById(id);
+            res.status(200).json(new outUserDTO(user));
+        } catch (error) {
+            next(error);
+        }
+    };
 
-    users[index] = { ...users[index], ...req.body };
-    res.status(200).json(users[index]);
-};
+    static async createUser(req, res, next) {
+        try {
+            const inputDTO = new InputUserDTO(req.body);
+            const newUser = await UserService.create(inputDTO);
+            res.status(201).json(new outUserDTO(newUser));
+        } catch (error) {
+            next(error);
+        }
+    };
 
-export const deleteUser = (req, res) => {
-    const { id } = req.params;
-    const index = users.findIndex(p => p.id === Number(id));
+    static async updateUser(req, res, next) {
+        try {
+            const { id } = req.params;
+            const updateDTO = new UpdateUserDTO(req.body);
+            const updatedUser = await UserService.update(id, updateDTO);
+            res.status(200).json(new outUserDTO(updatedUser));
+        } catch (error) {
+            next(error);
+        }
+    };
 
-    if (index === -1) {
-        return res.status(404).json({ mensagem: "Usuário não encontrado" });
-    }
+    static async deleteUser(req, res, next) {
+        try {
+            const { id } = req.params;
+            const deletedUser = await UserService.delete(id);
+            res.status(200).json({
+                mensagem: "Usuário desativado com sucesso",
+                user: new outUserDTO(deletedUser)
+            });
+        } catch (error) {
+            next(error);
+        }
+    };
+}
 
-    users[index] = { ...users[index], status: "inativo" };
-    res.status(200).json({ mensagem: "Usuário desativado com sucesso", user: users[index] });
-};
+export default UserController;

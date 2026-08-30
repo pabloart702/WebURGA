@@ -1,0 +1,48 @@
+import mongoose from 'mongoose';
+
+const userSchema = new mongoose.Schema({
+    nome: {
+        type: String,
+        required: [true, 'O campo nome é obrigatório.']
+    },
+    email: {
+        type: String,
+        required: [true, 'O campo email é obrigatório.'],
+        unique: true
+    },
+    password: {
+        type: String,
+        required: [true, 'O campo password é obrigatório.']
+    },
+    cpf: {
+        type: String,
+        required: [true, 'O campo CPF é obrigatório.'],
+        unique: true
+    },
+    matricula: {
+        type: String,
+        required: [true, 'O campo matrícula é obrigatório.'],
+        unique: true
+    },
+    cargo: {
+        type: String,
+        required: [true, 'O campo cargo é obrigatório.']
+    },
+    role: {
+        type: String,
+        default: "USUÁRIO"
+    },
+    departamento: {
+        type: String,
+        required: [true, 'O campo departamento é obrigatório.']
+    },
+    status: {
+        type: String,
+        default: "ATIVO"
+    }
+}, {
+    timestamps: true // Cria createdAt e updatedAt automaticamente
+});
+
+// Exporta o Model compilado
+export default mongoose.model('User', userSchema);

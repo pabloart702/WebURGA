@@ -1,142 +1,162 @@
 import { body } from 'express-validator';
 import { validateRequest } from '../Middlewares/errorMiddleware.js';
-const { cpf } = require('cpf-cnpj-validator');
+import { UNIDADES_POLICIAIS_VALIDAS } from '../Constants/unidades.js';
+import { removerAcentos } from '../Utils/sanitizers.js';
+import { cpf } from 'cpf-cnpj-validator';
 
-export const userValidator = [
+export const createUserValidator = [
     body('nome')
+        .notEmpty().withMessage('Nome é obrigatório')
+        .bail()
+        .isString().withMessage('Nome deve ser um texto')
+        .bail()
         .trim()
-        .isString().withMessage('Nome deve ser um texto').bail()
-        .notEmpty().withMessage('Nome é obrigatório').bail()
-        .isLength({ min: 3 }).withMessage('Nome deve ter pelo menos 3 caracteres').bail()
-        .isAlpha('pt-BR', { ignore: ' ' }).withMessage('O nome deve conter apenas letras').bail()
-        .escape(),
+        .isLength({ min: 6, max: 100 }).withMessage('O nome deve ter entre 6 e 100 carateres')
+        .isAlpha('pt-BR', { ignore: ' ' }).withMessage('O nome deve conter apenas letras'),
 
     body('email')
+        .notEmpty().withMessage('O email é obrigatório')
+        .bail()
+        .isString().withMessage('E-mail deve ser um texto')
+        .bail()
         .trim()
-        .notEmpty().withMessage('O email é obrigatório').bail()
-        .isEmail().withMessage('E-mail inválido').bail(),
+        .isEmail().withMessage('E-mail inválido')
+        .bail()
+        .normalizeEmail(),
 
     body('password')
+        .notEmpty().withMessage('Senha é obrigatória')
+        .bail()
+        .isString().withMessage('Formato de senha inválido')
+        .bail()
         .trim()
-        .notEmpty().withMessage('Senha é obrigatória').bail()
-        .isString().withMessage('Formato de senha inválido').bail()
-        .isLength({ min: 6, max: 32 }).withMessage('A senha deve ter no mínimo 6 caracteres').bail()
-        .matches(/[A-Z]/).withMessage('A senha precisa conter pelo menos uma letra maiúscula').bail()
-        .matches(/[a-z]/).withMessage('A senha precisa conter pelo menos uma letra minúscula').bail()
-        .matches(/\d/).withMessage('A senha precisa conter pelo menos um número').bail()
+        .isLength({ min: 6, max: 32 }).withMessage('A senha deve ter entre 6 e 32 carateres')
+        .matches(/[A-Z]/).withMessage('A senha precisa conter pelo menos uma letra maiúscula')
+        .matches(/[a-z]/).withMessage('A senha precisa conter pelo menos uma letra minúscula')
+        .matches(/\d/).withMessage('A senha precisa conter pelo menos um número')
         .matches(/[^A-Za-z0-9]/).withMessage('A senha deve conter pelo menos um caractere especial (!, @, #, $, etc.)'),
 
     body('cpf')
+        .notEmpty().withMessage('CPF é obrigatório')
+        .bail()
+        .isString().withMessage('O CPF deve ser enviado em formato de texto')
+        .bail()
         .trim()
-        .notEmpty().withMessage('CPF é obrigatório').bail()
-        .custom((value) => {
-            if (!cpf.isValid(value)) {
-                throw new Error('CPF inválido.');
-            }
-            return true;
-        })
+        .custom((value) => cpf.isValid(value)).withMessage('CPF inválido.')
         .customSanitizer((value) => cpf.strip(value)),
 
     body('matricula')
+        .notEmpty().withMessage('Matrícula é obrigatória')
+        .bail()
+        .isString().withMessage('Formato de matrícula inválido')
+        .bail()
         .trim()
-        .notEmpty().withMessage('Matrícula é obrigatória').bail()
-        .isString().withMessage('Formato de matrícula inválido').bail()
-        .matches(/^(\d{3}\.\d{3}-\d{1}|\d{7})$/).withMessage('Formato de matrícula inválido').bail()
+        .matches(/^(\d{3}\.\d{3}-\d{1}|\d{7})$/).withMessage('A matrícula deve ter 7 números')
         .customSanitizer((value) => value.replace(/\D/g, '')),
 
     body('cargo')
+        .notEmpty().withMessage('Cargo é obrigatório')
+        .bail()
+        .isString().withMessage('Formato de cargo inválido')
+        .bail()
         .trim()
-        .notEmpty().withMessage('Cargo é obrigatório').bail()
-        .isString().withMessage('Formato de cargo inválido').bail()
         .toUpperCase()
         .isIn(['DELEGADO', 'AGENTE', 'ESCRIVÃO']).withMessage('Cargo inválido. Escolha entre: Delegado, Agente ou Escrivão'),
 
     body('role')
+        .optional()
+        .isString().withMessage('Role deve ser um texto')
+        .bail()
         .trim()
-        .notEmpty().withMessage('Papel é obrigatório').bail()
-        .isString().withMessage('Formato de papel inválido').bail()
         .toUpperCase()
-        .isIn(['ADMINISTRADOR', 'USUÁRIO']).withMessage('Papel inválido. Escolha entre: Administrador ou Usuário').bail(),
+        .isIn(['ADMINISTRADOR', 'USUÁRIO']).withMessage('Role inválida. Valores permitidos: Administrador, Usuário.'),
 
     body('departamento')
-        .trim()
-        .notEmpty().withMessage('Departamento é obrigatório').bail()
-        .isString().withMessage('Departamento deve ser um texto').bail(),
+        .notEmpty().withMessage('Departamento é obrigatório')
+        .bail()
+        .isString().withMessage('Departamento deve ser um texto')
+        .bail()
+        .customSanitizer(value => typeof value === 'string' ? removerAcentos(value.trim().toUpperCase()) : value)
+        .isIn(UNIDADES_POLICIAIS_VALIDAS).withMessage('Departamento inválido.'),
 
     body('status')
+        .optional()
+        .isString().withMessage('Formato de status inválido')
+        .bail()
         .trim()
-        .notEmpty().withMessage('Status é obrigatório').bail()
         .toUpperCase()
         .isIn(['ATIVO', 'INATIVO']).withMessage('Status deve ser Ativo ou Inativo'),
 
     validateRequest,
 ];
 
-export const userUpdateValidator = [
+export const updateUserValidator = [
     body('nome')
+        .optional()
+        .isString().withMessage('Nome deve ser um texto')
+        .bail()
         .trim()
-        .isString().withMessage('Nome deve ser um texto').bail()
-        .notEmpty().withMessage('Nome é obrigatório').bail()
-        .isLength({ min: 3 }).withMessage('Nome deve ter pelo menos 3 caracteres').bail()
-        .isAlpha('pt-BR', { ignore: ' ' }).withMessage('O nome deve conter apenas letras').bail()
-        .escape(),
+        .isLength({ min: 6, max: 100 }).withMessage('O nome deve ter entre 6 e 100 carateres')
+        .isAlpha('pt-BR', { ignore: ' ' }).withMessage('O nome deve conter apenas letras'),
 
     body('email')
+        .optional()
+        .isString().withMessage('E-mail deve ser um texto')
+        .bail()
         .trim()
-        .notEmpty().withMessage('O email é obrigatório').bail()
-        .isEmail().withMessage('E-mail inválido').bail(),
+        .isEmail().withMessage('E-mail inválido')
+        .bail()
+        .normalizeEmail(),
 
     body('password')
+        .optional()
+        .isString().withMessage('Formato de senha inválido')
+        .bail()
         .trim()
-        .notEmpty().withMessage('Senha é obrigatória').bail()
-        .isString().withMessage('Formato de senha inválido').bail()
-        .isLength({ min: 6, max: 32 }).withMessage('A senha deve ter no mínimo 6 caracteres').bail()
-        .matches(/[A-Z]/).withMessage('A senha precisa conter pelo menos uma letra maiúscula').bail()
-        .matches(/[a-z]/).withMessage('A senha precisa conter pelo menos uma letra minúscula').bail()
-        .matches(/\d/).withMessage('A senha precisa conter pelo menos um número').bail()
+        .isLength({ min: 6, max: 32 }).withMessage('A senha deve ter entre 6 e 32 carateres')
+        .matches(/[A-Z]/).withMessage('A senha precisa conter pelo menos uma letra maiúscula')
+        .matches(/[a-z]/).withMessage('A senha precisa conter pelo menos uma letra minúscula')
+        .matches(/\d/).withMessage('A senha precisa conter pelo menos um número')
         .matches(/[^A-Za-z0-9]/).withMessage('A senha deve conter pelo menos um caractere especial (!, @, #, $, etc.)'),
 
     body('cpf')
-        .trim()
-        .notEmpty().withMessage('CPF é obrigatório').bail()
-        .custom((value) => {
-            if (!cpf.isValid(value)) {
-                throw new Error('CPF inválido.');
-            }
-            return true;
-        })
-        .customSanitizer((value) => cpf.strip(value)),
+        .not().exists()
+        .withMessage('O CPF não pode ser alterado após o cadastro'),
 
     body('matricula')
-        .trim()
-        .notEmpty().withMessage('Matrícula é obrigatória').bail()
-        .isString().withMessage('Formato de matrícula inválido').bail()
-        .matches(/^(\d{3}\.\d{3}-\d{1}|\d{7})$/).withMessage('Formato de matrícula inválido').bail()
-        .customSanitizer((value) => value.replace(/\D/g, '')),
+        .not().exists()
+        .withMessage('A matrícula não pode ser alterada após o cadastro'),
 
     body('cargo')
+        .optional()
+        .isString().withMessage('Formato de cargo inválido')
+        .bail()
         .trim()
-        .notEmpty().withMessage('Cargo é obrigatório').bail()
-        .isString().withMessage('Formato de cargo inválido').bail()
         .toUpperCase()
         .isIn(['DELEGADO', 'AGENTE', 'ESCRIVÃO']).withMessage('Cargo inválido. Escolha entre: Delegado, Agente ou Escrivão'),
 
     body('role')
+        .optional()
+        .isString().withMessage('Role deve ser um texto')
+        .bail()
         .trim()
-        .notEmpty().withMessage('Papel é obrigatório').bail()
-        .isString().withMessage('Formato de papel inválido').bail()
         .toUpperCase()
-        .isIn(['ADMINISTRADOR', 'USUÁRIO']).withMessage('Papel inválido. Escolha entre: Administrador ou Usuário').bail(),
+        .isIn(['ADMINISTRADOR', 'USUÁRIO']).withMessage('Role inválida. Valores permitidos: Administrador, Usuário.'),
 
     body('departamento')
-        .trim()
-        .notEmpty().withMessage('Departamento é obrigatório').bail()
-        .isString().withMessage('Departamento deve ser um texto').bail(),
+        .optional()
+        .isString().withMessage('Departamento deve ser um texto')
+        .bail()
+        .customSanitizer(value => typeof value === 'string' ? removerAcentos(value.trim().toUpperCase()) : value)
+        .isIn(UNIDADES_POLICIAIS_VALIDAS).withMessage('Departamento inválido.'),
 
     body('status')
+        .optional()
+        .isString().withMessage('Formato de status inválido')
+        .bail()
         .trim()
-        .notEmpty().withMessage('Status é obrigatório').bail()
         .toUpperCase()
         .isIn(['ATIVO', 'INATIVO']).withMessage('Status deve ser Ativo ou Inativo'),
+
     validateRequest
 ];

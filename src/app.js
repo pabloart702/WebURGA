@@ -2,23 +2,24 @@ import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './swagger.js';
 import userRoutes from './Routes/userRoutes.js';
-import apoioRoutes from './Routes/apoioRoutes.js';
+import formsRoutes from './Routes/formsRoutes.js';
+import authRoutes from './Routes/authRoutes.js';
+import { globalErrorHandler } from './Middlewares/errorMiddleware.js';
+import { authMiddleware } from './Middlewares/authMiddleware.js';
+import { webLog } from './Middlewares/logMiddleware.js';
 
 const app = express();
 
 app.use(express.json());
 
-// Middleware de validação
-const meuLog = (req, res, next) => {
-    const data = new Date().toISOString();
-    console.log(`[${data}] ${req.method} em ${req.url}`);
-    next();
-};
-app.use(meuLog); // Aplica globalmente
+app.use(webLog);
 
 // Swagger UI
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use('/users', userRoutes);
-app.use('/apoios', apoioRoutes);
+app.use('/auth', authRoutes);
+app.use('/users', authMiddleware, userRoutes);
+app.use('/forms', authMiddleware, formsRoutes);
+
+app.use(globalErrorHandler);
 
 export default app;

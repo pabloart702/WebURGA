@@ -20,11 +20,17 @@
   },
   "homepage": "https://github.com/pabloart702/WebURGA#readme",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "cpf-cnpj-validator": "^2.1.2",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.7.0",
     "express-validator": "^7.3.2",
+    "jsonwebtoken": "^9.0.3",
+    "mongodb": "^7.6.0",
+    "mongoose": "^9.9.4",
     "swagger-jsdoc": "^6.3.0",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "uuid": "^14.0.2"
   }
 }

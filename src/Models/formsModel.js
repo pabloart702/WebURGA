@@ -1,0 +1,56 @@
+import mongoose from 'mongoose';
+
+const formsSchema = new mongoose.Schema({
+    departamento: {
+        type: String,
+        required: [true, 'O campo departamento é obrigatório.']
+    },
+    operacao: {
+        type: String,
+        required: [true, 'O campo operacao é obrigatório.']
+    },
+    data_operacao: {
+        type: Date,
+        required: [true, 'O campo data_operacao é obrigatório.']
+    },
+    numero_processo: {
+        type: String,
+        required: [true, 'O campo numero_processo é obrigatório.']
+    },
+    medida_cautelar: {
+        type: String,
+        required: [true, 'O campo medida_cautelar é obrigatório.']
+    },
+    numero_cautelar: {
+        type: String,
+        required: [true, 'O campo numero_cautelar é obrigatório.']
+    },
+    resultados: {
+        type: [String],
+        required: [true, 'O campo resultados é obrigatório.']
+    },
+    tipos_apreendidos: {
+        type: [String],
+        required: [true, 'O campo tipos_apreendidos é obrigatório.']
+    },
+    descricao_operacao: {
+        type: String
+    },
+    valor_estimado: {
+        type: Number,
+        required: [true, 'O campo valor_estimado é obrigatório.']
+    },
+    status: {
+        type: String,
+        default: 'pendente'
+    },
+    criador: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: [true, 'O criador do formulário é obrigatório.']
+    }
+}, {
+    timestamps: true
+});
+
+export default mongoose.model('Forms', formsSchema);
