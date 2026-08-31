@@ -22,15 +22,29 @@ const router = Router();
  *             properties:
  *               email:
  *                 type: string
+ *                 example: teste@gmail.com
+ *                 description: O email cadastrado do usuário
  *               password:
  *                 type: string
+ *                 example: Password_123
+ *                 description: A senha do usuário
  *     responses:
  *       200:
  *         description: Login bem-sucedido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI..."
  *       400:
  *         description: Email e senha obrigatórios
  *       401:
  *         description: Credenciais inválidas
+ *       429:
+ *         description: Muitas requisições (Rate Limit)
  */
 router.post("/login", loginLimiter, AuthController.login);
 

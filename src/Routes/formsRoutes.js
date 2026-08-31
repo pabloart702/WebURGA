@@ -19,22 +19,50 @@ const router = Router();
  *         - descricao
  *       properties:
  *         id:
- *           type: number
+ *           type: string
  *           description: O ID gerado automaticamente para o formulário
- *         titulo:
+ *         departamento:
  *           type: string
- *           description: Título do formulário
- *         descricao:
+ *         operacao:
  *           type: string
- *           description: Descrição do formulário
+ *         data_operacao:
+ *           type: string
+ *         numero_processo:
+ *           type: string
+ *         medida_cautelar:
+ *           type: string
+ *         numero_cautelar:
+ *           type: string
+ *         resultados:
+ *           type: array
+ *           items:
+ *             type: string
+ *         tipos_apreendidos:
+ *           type: array
+ *           items:
+ *             type: string
+ *         descricao_operacao:
+ *           type: string
+ *         valor_estimado:
+ *           type: number
  *         status:
  *           type: string
- *           description: Status do formulário (pendente, aprovado, cancelado)
+ *         criador:
+ *           type: string
  *       example:
- *         id: 1693000000000
- *         titulo: Suporte TI
- *         descricao: O computador não liga
+ *         id: 6a8f52....
+ *         departamento: Homicídios
+ *         operacao: Operação Limpeza
+ *         data_operacao: 25-08-2026
+ *         numero_processo: 123456789012345
+ *         medida_cautelar: BUSCA E APREENSÃO
+ *         numero_cautelar: 9876543210
+ *         resultados: ["APREENSAO", "SEQUESTRO"]
+ *         tipos_apreendidos: ["CARRO", "DINHEIRO"]
+ *         descricao_operacao: Apreensão de bens ilícitos.
+ *         valor_estimado: 150000.00
  *         status: pendente
+ *         criador: 6a8f52...
  */
 
 /**
@@ -100,13 +128,41 @@ router.get("/:id", authMiddleware, authorize('USUÁRIO', 'ADMINISTRADOR'), forms
  *           schema:
  *             type: object
  *             properties:
- *               titulo:
+ *               departamento:
  *                 type: string
- *               descricao:
+ *               operacao:
  *                 type: string
+ *               data_operacao:
+ *                 type: string
+ *               numero_processo:
+ *                 type: string
+ *               medida_cautelar:
+ *                 type: string
+ *               numero_cautelar:
+ *                 type: string
+ *               resultados:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               tipos_apreendidos:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               descricao_operacao:
+ *                 type: string
+ *               valor_estimado:
+ *                 type: number
  *             example:
- *               titulo: Suporte TI
- *               descricao: O computador não liga
+ *               departamento: Homicídios
+ *               operacao: Operação Limpeza
+ *               data_operacao: 25-08-2026
+ *               numero_processo: 123456789012345
+ *               medida_cautelar: BUSCA E APREENSÃO
+ *               numero_cautelar: 9876543210
+ *               resultados: ["APREENSAO", "SEQUESTRO"]
+ *               tipos_apreendidos: ["CARRO", "DINHEIRO"]
+ *               descricao_operacao: Apreensão de bens ilícitos.
+ *               valor_estimado: 150000.00
  *     responses:
  *       201:
  *         description: O formulário foi criado com sucesso
@@ -137,13 +193,33 @@ router.post("/", authMiddleware, authorize('USUÁRIO', 'ADMINISTRADOR'), CreateF
  *           schema:
  *             type: object
  *             properties:
- *               titulo:
+ *               departamento:
  *                 type: string
- *               descricao:
+ *               operacao:
  *                 type: string
+ *               data_operacao:
+ *                 type: string
+ *               numero_processo:
+ *                 type: string
+ *               medida_cautelar:
+ *                 type: string
+ *               numero_cautelar:
+ *                 type: string
+ *               resultados:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               tipos_apreendidos:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               descricao_operacao:
+ *                 type: string
+ *               valor_estimado:
+ *                 type: number
  *             example:
- *               titulo: Manutenção Elétrica
- *               descricao: Trocar lâmpada da sala 3
+ *               operacao: Operação Limpeza Fase 2
+ *               valor_estimado: 250000.00
  *     responses:
  *       200:
  *         description: O formulário foi atualizado com sucesso

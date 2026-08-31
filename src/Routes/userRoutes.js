@@ -17,18 +17,36 @@ const router = Router();
  *         - nome
  *       properties:
  *         id:
- *           type: number
+ *           type: string
  *           description: O ID gerado automaticamente para o usuário
  *         nome:
  *           type: string
  *           description: Nome do usuário
+ *         email:
+ *           type: string
+ *         cpf:
+ *           type: string
+ *         matricula:
+ *           type: string
+ *         cargo:
+ *           type: string
+ *         role:
+ *           type: string
+ *         departamento:
+ *           type: string
  *         status:
  *           type: string
  *           description: Status do usuário (ativo, inativo)
  *       example:
- *         id: 1693000000000
- *         nome: João
- *         status: ativo
+ *         id: 6a8f52.....
+ *         nome: Maria Silva
+ *         email: maria@gmail.com
+ *         cpf: 51256825120
+ *         matricula: 111.222-3
+ *         cargo: Delegado
+ *         role: ADMINISTRADOR
+ *         departamento: Homicídios
+ *         status: ATIVO
  */
 
 /**
@@ -96,8 +114,29 @@ router.get("/id/:id", authMiddleware, authorize('ADMINISTRADOR'), UserController
  *             properties:
  *               nome:
  *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               cpf:
+ *                 type: string
+ *               matricula:
+ *                 type: string
+ *               cargo:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *               departamento:
+ *                 type: string
  *             example:
- *               nome: Maria
+ *               nome: Maria Silva
+ *               email: maria@gmail.com
+ *               password: password123
+ *               cpf: 12345678901
+ *               matricula: 999.888-7
+ *               cargo: Escrivão
+ *               role: USUÁRIO
+ *               departamento: Homicídios
  *     responses:
  *       201:
  *         description: O usuário foi criado com sucesso
@@ -130,8 +169,21 @@ router.post("/", authMiddleware, authorize('ADMINISTRADOR'), createUserValidator
  *             properties:
  *               nome:
  *                 type: string
+ *               email:
+ *                 type: string
+ *               cpf:
+ *                 type: string
+ *               matricula:
+ *                 type: string
+ *               cargo:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *               departamento:
+ *                 type: string
  *             example:
- *               nome: Maria Atualizada
+ *               nome: Maria Silva Atualizada
+ *               departamento: Narcóticos
  *     responses:
  *       200:
  *         description: O usuário foi atualizado com sucesso
