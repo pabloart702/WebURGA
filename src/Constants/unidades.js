@@ -1,5 +1,3 @@
-import { removerAcentos } from '../Utils/sanitizers.js';
-
 export const UNIDADES_POLICIAIS = [
     "Delegacia-Geral da Polícia Civil (DEGEPOLI)",
     "Delegacia-Geral Adjunta da Polícia Civil (DEGEPOL ADJ)",
@@ -235,4 +233,4 @@ export const UNIDADES_POLICIAIS = [
     "URGA"
 ];
 
-export const UNIDADES_POLICIAIS_VALIDAS = UNIDADES_POLICIAIS.map(u => removerAcentos(u.trim().toUpperCase()));
+export const UNIDADES_POLICIAIS_VALIDAS = UNIDADES_POLICIAIS;

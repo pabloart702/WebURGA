@@ -1,7 +1,6 @@
 import { body } from 'express-validator';
 import { validateRequest } from '../Middlewares/errorMiddleware.js';
 import { UNIDADES_POLICIAIS_VALIDAS } from '../Constants/unidades.js';
-import { removerAcentos } from '../Utils/sanitizers.js';
 import { cpf } from 'cpf-cnpj-validator';
 
 export const createUserValidator = [
@@ -60,23 +59,20 @@ export const createUserValidator = [
         .isString().withMessage('Formato de cargo inválido')
         .bail()
         .trim()
-        .toUpperCase()
-        .isIn(['DELEGADO', 'AGENTE', 'ESCRIVÃO']).withMessage('Cargo inválido. Escolha entre: Delegado, Agente ou Escrivão'),
+        .isIn(['Delegado', 'Agente', 'Escrivão']).withMessage('Cargo inválido. Escolha entre: Delegado, Agente ou Escrivão'),
 
     body('role')
         .optional()
         .isString().withMessage('Role deve ser um texto')
         .bail()
         .trim()
-        .toUpperCase()
-        .isIn(['ADMINISTRADOR', 'USUÁRIO']).withMessage('Role inválida. Valores permitidos: Administrador, Usuário.'),
+        .isIn(['Administrador', 'Usuário']).withMessage('Role inválida. Valores permitidos: Administrador, Usuário.'),
 
     body('departamento')
         .notEmpty().withMessage('Departamento é obrigatório')
         .bail()
         .isString().withMessage('Departamento deve ser um texto')
         .bail()
-        .customSanitizer(value => typeof value === 'string' ? removerAcentos(value.trim().toUpperCase()) : value)
         .isIn(UNIDADES_POLICIAIS_VALIDAS).withMessage('Departamento inválido.'),
 
     body('status')
@@ -84,8 +80,7 @@ export const createUserValidator = [
         .isString().withMessage('Formato de status inválido')
         .bail()
         .trim()
-        .toUpperCase()
-        .isIn(['ATIVO', 'INATIVO']).withMessage('Status deve ser Ativo ou Inativo'),
+        .isIn(['Ativo', 'Inativo']).withMessage('Status deve ser Ativo ou Inativo'),
 
     validateRequest,
 ];
@@ -132,22 +127,19 @@ export const updateUserValidator = [
         .isString().withMessage('Formato de cargo inválido')
         .bail()
         .trim()
-        .toUpperCase()
-        .isIn(['DELEGADO', 'AGENTE', 'ESCRIVÃO']).withMessage('Cargo inválido. Escolha entre: Delegado, Agente ou Escrivão'),
+        .isIn(['Delegado', 'Agente', 'Escrivão']).withMessage('Cargo inválido. Escolha entre: Delegado, Agente ou Escrivão'),
 
     body('role')
         .optional()
         .isString().withMessage('Role deve ser um texto')
         .bail()
         .trim()
-        .toUpperCase()
-        .isIn(['ADMINISTRADOR', 'USUÁRIO']).withMessage('Role inválida. Valores permitidos: Administrador, Usuário.'),
+        .isIn(['Administrador', 'Usuário']).withMessage('Role inválida. Valores permitidos: Administrador, Usuário.'),
 
     body('departamento')
         .optional()
         .isString().withMessage('Departamento deve ser um texto')
         .bail()
-        .customSanitizer(value => typeof value === 'string' ? removerAcentos(value.trim().toUpperCase()) : value)
         .isIn(UNIDADES_POLICIAIS_VALIDAS).withMessage('Departamento inválido.'),
 
     body('status')
@@ -155,8 +147,7 @@ export const updateUserValidator = [
         .isString().withMessage('Formato de status inválido')
         .bail()
         .trim()
-        .toUpperCase()
-        .isIn(['ATIVO', 'INATIVO']).withMessage('Status deve ser Ativo ou Inativo'),
+        .isIn(['Ativo', 'Inativo']).withMessage('Status deve ser Ativo ou Inativo'),
 
     validateRequest
 ];

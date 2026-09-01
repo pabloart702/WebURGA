@@ -1,6 +1,5 @@
 import { body } from 'express-validator';
 import { validateRequest } from '../Middlewares/errorMiddleware.js';
-import { removerAcentos } from '../Utils/sanitizers.js';
 import { UNIDADES_POLICIAIS_VALIDAS } from '../Constants/unidades.js';
 import { BENS_VALIDOS } from '../Constants/bens.js';
 
@@ -11,16 +10,13 @@ export const CreateFormsValidator = [
         .isLength({ max: 100 }).withMessage('Departamento muito longo')
         .bail()
         .trim()
-        .customSanitizer(value => typeof value === 'string' ? removerAcentos(value.trim().toUpperCase()) : value)
         .isIn(UNIDADES_POLICIAIS_VALIDAS).withMessage('Departamento inválido.'),
     body('operacao')
         .notEmpty().withMessage('Operação é obrigatória')
         .isString().withMessage('Operação deve ser um texto')
         .bail()
         .trim()
-        .isLength({ min: 3, max: 50 }).withMessage('A operação deve ter entre 3 e 50 carateres')
-        .customSanitizer(removerAcentos)
-        .toUpperCase(),
+        .isLength({ min: 3, max: 50 }).withMessage('A operação deve ter entre 3 e 50 carateres'),
     body('data_operacao')
         .notEmpty().withMessage('Data da operação é obrigatória')
         .matches(/^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/]\d{4}$/).withMessage('Data da operação deve estar no formato DD/MM/YYYY ou DD-MM-YYYY')
@@ -38,8 +34,7 @@ export const CreateFormsValidator = [
         .isLength({ max: 50 }).withMessage('Medida cautelar muito longa')
         .bail()
         .trim()
-        .customSanitizer(value => typeof value === 'string' ? removerAcentos(value.trim().toUpperCase()) : value)
-        .isIn(["BUSCA E APREENSAO", "AUTO DE PRISAO EM FLAGRANTE", "SEQUESTRO", "BLOQUEIO"]).withMessage('Medida cautelar inválida. Valores aceitos: Busca e Apreensão, Auto de Prisão em Flagrante, Sequestro, Bloqueio.'),
+        .isIn(["Busca e Apreensão", "Auto de Prisão em Flagrante", "Sequestro", "Bloqueio"]).withMessage('Medida cautelar inválida. Valores aceitos: Busca e Apreensão, Auto de Prisão em Flagrante, Sequestro, Bloqueio.'),
     body('numero_cautelar')
         .notEmpty().withMessage('Número da medida cautelar é obrigatório')
         .isString().withMessage('Número da medida cautelar deve ser um texto')
@@ -55,9 +50,8 @@ export const CreateFormsValidator = [
         .bail()
         .custom((arr) => arr.every(item => typeof item === 'string' && item.length <= 30)).withMessage('Cada resultado deve ser um texto de até 30 caracteres')
         .bail()
-        .customSanitizer(arr => arr.map(item => removerAcentos(item.trim().toUpperCase())))
         .custom((arr) => {
-            const validos = ["USO", "APREENSAO", "SEQUESTRO", "INDISPONIBILIDADES", "BLOQUEIO", "DEPOSITO"];
+            const validos = ["Uso", "Apreensão", "Sequestro", "Indisponibilidades", "Bloqueio", "Depósito"];
             return arr.every(item => validos.includes(item));
         }).withMessage('Resultado inválido. Valores aceitos: Uso, Apreensão, Sequestro, Indisponibilidades, Bloqueio, Depósito.'),
     body('tipos_apreendidos')
@@ -68,7 +62,6 @@ export const CreateFormsValidator = [
         .bail()
         .custom((arr) => arr.every(item => typeof item === 'string' && item.length <= 100)).withMessage('Cada tipo apreendido deve ser um texto de até 100 caracteres')
         .bail()
-        .customSanitizer(arr => arr.map(item => removerAcentos(item.trim().toUpperCase())))
         .custom((arr) => {
             return arr.every(item => {
                 if (!BENS_VALIDOS.includes(item)) {
@@ -96,16 +89,13 @@ export const UpdateFormsValidator = [
         .isLength({ max: 100 }).withMessage('Departamento muito longo')
         .bail()
         .trim()
-        .customSanitizer(value => typeof value === 'string' ? removerAcentos(value.trim().toUpperCase()) : value)
         .isIn(UNIDADES_POLICIAIS_VALIDAS).withMessage('Departamento inválido.'),
     body('operacao')
         .optional()
         .isString().withMessage('Operação deve ser um texto')
         .bail()
         .trim()
-        .isLength({ min: 3, max: 50 }).withMessage('A operação deve ter entre 3 e 50 carateres')
-        .customSanitizer(removerAcentos)
-        .toUpperCase(),
+        .isLength({ min: 3, max: 50 }).withMessage('A operação deve ter entre 3 e 50 carateres'),
     body('data_operacao')
         .optional()
         .matches(/^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/]\d{4}$/).withMessage('Data da operação deve estar no formato DD/MM/YYYY ou DD-MM-YYYY')
@@ -123,8 +113,7 @@ export const UpdateFormsValidator = [
         .isLength({ max: 50 }).withMessage('Medida cautelar muito longa')
         .bail()
         .trim()
-        .customSanitizer(value => typeof value === 'string' ? removerAcentos(value.trim().toUpperCase()) : value)
-        .isIn(["BUSCA E APREENSAO", "AUTO DE PRISAO EM FLAGRANTE", "SEQUESTRO", "BLOQUEIO"]).withMessage('Medida cautelar inválida. Valores aceitos: Busca e Apreensão, Auto de Prisão em Flagrante, Sequestro, Bloqueio.'),
+        .isIn(["Busca e Apreensão", "Auto de Prisão em Flagrante", "Sequestro", "Bloqueio"]).withMessage('Medida cautelar inválida. Valores aceitos: Busca e Apreensão, Auto de Prisão em Flagrante, Sequestro, Bloqueio.'),
     body('numero_cautelar')
         .optional()
         .isString().withMessage('Número da medida cautelar deve ser um texto')
@@ -140,9 +129,8 @@ export const UpdateFormsValidator = [
         .bail()
         .custom((arr) => arr.every(item => typeof item === 'string' && item.length <= 30)).withMessage('Cada resultado deve ser um texto de até 30 caracteres')
         .bail()
-        .customSanitizer(arr => arr.map(item => removerAcentos(item.trim().toUpperCase())))
         .custom((arr) => {
-            const validos = ["USO", "APREENSAO", "SEQUESTRO", "INDISPONIBILIDADES", "BLOQUEIO", "DEPOSITO"];
+            const validos = ["Uso", "Apreensão", "Sequestro", "Indisponibilidades", "Bloqueio", "Depósito"];
             return arr.every(item => validos.includes(item));
         }).withMessage('Resultado inválido. Valores aceitos: Uso, Apreensão, Sequestro, Indisponibilidades, Bloqueio, Depósito.'),
     body('tipos_apreendidos')
@@ -153,7 +141,6 @@ export const UpdateFormsValidator = [
         .bail()
         .custom((arr) => arr.every(item => typeof item === 'string' && item.length <= 100)).withMessage('Cada tipo apreendido deve ser um texto de até 100 caracteres')
         .bail()
-        .customSanitizer(arr => arr.map(item => removerAcentos(item.trim().toUpperCase())))
         .custom((arr) => {
             return arr.every(item => {
                 if (!BENS_VALIDOS.includes(item)) {
