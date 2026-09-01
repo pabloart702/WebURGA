@@ -34,7 +34,7 @@ export const CreateFormsValidator = [
         .isLength({ max: 50 }).withMessage('Medida cautelar muito longa')
         .bail()
         .trim()
-        .isIn(["Busca e Apreensão", "Auto de Prisão em Flagrante", "Sequestro", "Bloqueio"]).withMessage('Medida cautelar inválida. Valores aceitos: Busca e Apreensão, Auto de Prisão em Flagrante, Sequestro, Bloqueio.'),
+        .isIn(["Busca e apreensão", "Auto de prisão em flagrante", "Sequestro", "Bloqueio"]).withMessage('Medida cautelar inválida. Valores aceitos: Busca e Apreensão, Auto de Prisão em Flagrante, Sequestro, Bloqueio.'),
     body('numero_cautelar')
         .notEmpty().withMessage('Número da medida cautelar é obrigatório')
         .isString().withMessage('Número da medida cautelar deve ser um texto')
@@ -113,7 +113,7 @@ export const UpdateFormsValidator = [
         .isLength({ max: 50 }).withMessage('Medida cautelar muito longa')
         .bail()
         .trim()
-        .isIn(["Busca e Apreensão", "Auto de Prisão em Flagrante", "Sequestro", "Bloqueio"]).withMessage('Medida cautelar inválida. Valores aceitos: Busca e Apreensão, Auto de Prisão em Flagrante, Sequestro, Bloqueio.'),
+        .isIn(["Busca e apreensão", "Auto de prisão em flagrante", "Sequestro", "Bloqueio"]).withMessage('Medida cautelar inválida. Valores aceitos: Busca e Apreensão, Auto de Prisão em Flagrante, Sequestro, Bloqueio.'),
     body('numero_cautelar')
         .optional()
         .isString().withMessage('Número da medida cautelar deve ser um texto')

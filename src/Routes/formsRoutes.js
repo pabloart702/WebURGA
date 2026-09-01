@@ -88,7 +88,7 @@ const router = Router();
  *               items:
  *                 $ref: '#/components/schemas/Forms'
  */
-router.get("/", authMiddleware, authorize('USUÁRIO', 'ADMINISTRADOR'), formsController.listForms);
+router.get("/", authMiddleware, authorize('Usuário', 'Administrador'), formsController.listForms);
 
 /**
  * @swagger
@@ -113,7 +113,7 @@ router.get("/", authMiddleware, authorize('USUÁRIO', 'ADMINISTRADOR'), formsCon
  *       404:
  *         description: Formulário não encontrado
  */
-router.get("/:id", authMiddleware, authorize('USUÁRIO', 'ADMINISTRADOR'), formsController.searchFormsById);
+router.get("/:id", authMiddleware, authorize('Usuário', 'Administrador'), formsController.searchFormsById);
 
 /**
  * @swagger
@@ -171,7 +171,7 @@ router.get("/:id", authMiddleware, authorize('USUÁRIO', 'ADMINISTRADOR'), forms
  *             schema:
  *               $ref: '#/components/schemas/Forms'
  */
-router.post("/", authMiddleware, authorize('USUÁRIO', 'ADMINISTRADOR'), CreateFormsValidator, validateRequest, formsController.createForms);
+router.post("/", authMiddleware, authorize('Usuário', 'Administrador'), CreateFormsValidator, validateRequest, formsController.createForms);
 
 /**
  * @swagger
@@ -230,7 +230,7 @@ router.post("/", authMiddleware, authorize('USUÁRIO', 'ADMINISTRADOR'), CreateF
  *       404:
  *         description: Formulário não encontrado
  */
-router.patch("/:id", authMiddleware, authorize('USUÁRIO', 'ADMINISTRADOR'), UpdateFormsValidator, validateRequest, formsController.updateForms);
+router.patch("/:id", authMiddleware, authorize('Usuário', 'Administrador'), UpdateFormsValidator, validateRequest, formsController.updateForms);
 
 /**
  * @swagger
@@ -260,6 +260,6 @@ router.patch("/:id", authMiddleware, authorize('USUÁRIO', 'ADMINISTRADOR'), Upd
  *       404:
  *         description: Formulário não encontrado
  */
-router.delete("/:id", authMiddleware, authorize('USUÁRIO', 'ADMINISTRADOR'), formsController.deleteForms);
+router.delete("/:id", authMiddleware, authorize('Usuário', 'Administrador'), formsController.deleteForms);
 
 export default router;

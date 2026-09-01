@@ -72,7 +72,7 @@ const router = Router();
  *               items:
  *                 $ref: '#/components/schemas/User'
  */
-router.get("/", authMiddleware, authorize('ADMINISTRADOR'), UserController.listUsers);
+router.get("/", authMiddleware, authorize('Administrador'), UserController.listUsers);
 
 /**
  * @swagger
@@ -97,7 +97,7 @@ router.get("/", authMiddleware, authorize('ADMINISTRADOR'), UserController.listU
  *       404:
  *         description: Usuário não encontrado
  */
-router.get("/id/:id", authMiddleware, authorize('ADMINISTRADOR'), UserController.searchUserForId);
+router.get("/id/:id", authMiddleware, authorize('Administrador'), UserController.searchUserForId);
 
 /**
  * @swagger
@@ -145,7 +145,7 @@ router.get("/id/:id", authMiddleware, authorize('ADMINISTRADOR'), UserController
  *             schema:
  *               $ref: '#/components/schemas/User'
  */
-router.post("/", authMiddleware, authorize('ADMINISTRADOR'), createUserValidator, validateRequest, UserController.createUser);
+router.post("/", authMiddleware, authorize('Administrador'), createUserValidator, validateRequest, UserController.createUser);
 
 /**
  * @swagger
@@ -194,7 +194,7 @@ router.post("/", authMiddleware, authorize('ADMINISTRADOR'), createUserValidator
  *       404:
  *         description: Usuário não encontrado
  */
-router.patch("/id/:id", authMiddleware, authorize('USUÁRIO', 'ADMINISTRADOR'), updateUserValidator, validateRequest, UserController.updateUser);
+router.patch("/id/:id", authMiddleware, authorize('Usuário', 'Administrador'), updateUserValidator, validateRequest, UserController.updateUser);
 
 /**
  * @swagger
@@ -224,6 +224,6 @@ router.patch("/id/:id", authMiddleware, authorize('USUÁRIO', 'ADMINISTRADOR'), 
  *       404:
  *         description: Usuário não encontrado
  */
-router.delete("/id/:id", authMiddleware, authorize('ADMINISTRADOR'), UserController.deleteUser);
+router.delete("/id/:id", authMiddleware, authorize('Administrador'), UserController.deleteUser);
 
 export default router;

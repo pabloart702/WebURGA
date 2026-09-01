@@ -7,7 +7,7 @@ class FormsController {
             const page = parseInt(req.query.page, 10) || 1;
             const limit = parseInt(req.query.limit, 10) || 10;
 
-            const result = await formsService.getForms(page, limit);
+            const result = await formsService.getForms(page, limit, req.user);
             res.status(200).json(result);
         } catch (error) {
             next(error);
@@ -17,7 +17,7 @@ class FormsController {
     async searchFormsById(req, res, next) {
         try {
             const { id } = req.params;
-            const form = await formsService.getFormsById(id);
+            const form = await formsService.getFormsById(id, req.user);
             res.status(200).json(form);
         } catch (error) {
             next(error);
@@ -30,7 +30,7 @@ class FormsController {
             const userId = req.user?.id || req.user?._id;
 
             const inputDto = new InputFormsDTO(req.body, userId);
-            const newForms = await formsService.createForms(inputDto);
+            const newForms = await formsService.createForms(inputDto, req.user);
 
             res.status(201).json(newForms);
         } catch (error) {
@@ -55,7 +55,7 @@ class FormsController {
     async deleteForms(req, res, next) {
         try {
             const { id } = req.params;
-            const deletedForms = await formsService.deleteForms(id);
+            const deletedForms = await formsService.deleteForms(id, req.user);
 
             res.status(200).json({
                 mensagem: "Formulário cancelado com sucesso",

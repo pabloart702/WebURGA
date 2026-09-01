@@ -6,16 +6,16 @@ class FormsRepository {
         return await form.save();
     }
 
-    async findAll(page = 1, limit = 10) {
+    async findAll(page = 1, limit = 10, filter = {}) {
         const skip = (page - 1) * limit;
 
-        const forms = await Forms.find()
+        const forms = await Forms.find(filter)
             .populate('criador', 'nome cpf')
             .skip(skip)
             .limit(limit)
             .sort({ createdAt: -1 });
 
-        const total = await Forms.countDocuments();
+        const total = await Forms.countDocuments(filter);
 
         return {
             forms,
