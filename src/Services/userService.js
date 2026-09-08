@@ -2,9 +2,9 @@ import UserRepository from "../Repositories/userRepository.js";
 import bcrypt from 'bcrypt';
 
 class UserService {
-    static async findAll(page) {
+    static async findAll(page, searchTerm, departamento) {
         if (!page || page < 1) page = 1;
-        const users = await UserRepository.findAll(page);
+        const users = await UserRepository.findAll(page, searchTerm, departamento);
         if (!users || !users.data || users.data.length === 0) {
             const err = new Error("Nenhum usuário encontrado.");
             err.statusCode = 404;
@@ -76,6 +76,33 @@ class UserService {
             const userByNome = await UserRepository.findByNome(userData.nome);
             if (userByNome) {
                 const err = new Error("Já existe um usuário cadastrado com este Nome.");
+                err.statusCode = 400;
+                throw err;
+            }
+        }
+
+        if (userData.email && userData.email.toLowerCase() !== currentUser.email.toLowerCase()) {
+            const userByEmail = await UserRepository.findByEmail(userData.email);
+            if (userByEmail) {
+                const err = new Error("Já existe um usuário cadastrado com este E-mail.");
+                err.statusCode = 400;
+                throw err;
+            }
+        }
+
+        if (userData.cpf && userData.cpf !== currentUser.cpf) {
+            const userByCpf = await UserRepository.findByCpf(userData.cpf);
+            if (userByCpf) {
+                const err = new Error("Já existe um usuário cadastrado com este CPF.");
+                err.statusCode = 400;
+                throw err;
+            }
+        }
+
+        if (userData.matricula && userData.matricula !== currentUser.matricula) {
+            const userByMatricula = await UserRepository.findByMatricula(userData.matricula);
+            if (userByMatricula) {
+                const err = new Error("Já existe um usuário cadastrado com esta Matrícula.");
                 err.statusCode = 400;
                 throw err;
             }

@@ -7,7 +7,9 @@ class UserController {
     static async listUsers(req, res, next) {
         try {
             const page = parseInt(req.query.page) || 1;
-            const result = await UserService.findAll(page);
+            const searchTerm = req.query.search || '';
+            const departamento = req.query.departamento || '';
+            const result = await UserService.findAll(page, searchTerm, departamento);
 
             // Mapeia apenas os usuários dentro da propriedade 'data' para o DTO
             result.data = result.data.map(user => new outUserDTO(user));
@@ -57,6 +59,27 @@ class UserController {
                 mensagem: "Usuário desativado com sucesso",
                 user: new outUserDTO(deletedUser)
             });
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    static async getProfile(req, res, next) {
+        try {
+            const id = req.user.id;
+            const user = await UserService.findById(id);
+            res.status(200).json(new outUserDTO(user));
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    static async updateProfile(req, res, next) {
+        try {
+            const id = req.user.id;
+            const updateDTO = new UpdateUserDTO(req.body);
+            const updatedUser = await UserService.update(id, updateDTO);
+            res.status(200).json(new outUserDTO(updatedUser));
         } catch (error) {
             next(error);
         }

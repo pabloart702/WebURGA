@@ -1,12 +1,26 @@
 import User from '../Models/userModel.js';
 
 class UserRepository {
-    async findAll(page) {
-        const limit = 20;
+    async findAll(page, searchTerm = '', departamento = '') {
+        const limit = 50;
         const skip = (page - 1) * limit;
 
-        const data = await User.find().skip(skip).limit(limit);
-        const totalItems = await User.estimatedDocumentCount();
+        const query = {};
+        
+        if (departamento) {
+            query.departamento = departamento;
+        }
+
+        if (searchTerm) {
+            query.$or = [
+                { nome: { $regex: searchTerm, $options: 'i' } },
+                { cpf: { $regex: searchTerm, $options: 'i' } },
+                { matricula: { $regex: searchTerm, $options: 'i' } }
+            ];
+        }
+
+        const data = await User.find(query).skip(skip).limit(limit);
+        const totalItems = await User.countDocuments(query);
         const totalPages = Math.ceil(totalItems / limit);
 
         return {

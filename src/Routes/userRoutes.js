@@ -1,6 +1,6 @@
 import { Router } from "express";
 import UserController from "../Controllers/userControllers.js";
-import { createUserValidator, updateUserValidator } from "../Validators/userValidator.js";
+import { createUserValidator, updateUserValidator, updateProfileValidator } from "../Validators/userValidator.js";
 import { authMiddleware } from "../Middlewares/authMiddleware.js";
 import { authorize } from "../Middlewares/permissionMiddleware.js";
 import { validateRequest } from "../Middlewares/errorMiddleware.js";
@@ -225,5 +225,59 @@ router.patch("/id/:id", authMiddleware, authorize('Usuário', 'Administrador'), 
  *         description: Usuário não encontrado
  */
 router.delete("/id/:id", authMiddleware, authorize('Administrador'), UserController.deleteUser);
+
+/**
+ * @swagger
+ * /users/perfil:
+ *   patch:
+ *     summary: Atualiza os dados do perfil do usuário autenticado
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nome:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               cargo:
+ *                 type: string
+ *             example:
+ *               nome: Maria Silva Atualizada
+ *               email: maria_nova@gmail.com
+ *     responses:
+ *       200:
+ *         description: O perfil foi atualizado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Não autorizado
+ *       404:
+ *         description: Usuário não encontrado
+ */
+router.patch("/perfil", authMiddleware, authorize('Usuário', 'Administrador'), updateProfileValidator, UserController.updateProfile);
+
+/**
+ * @swagger
+ * /users/perfil:
+ *   get:
+ *     summary: Retorna os dados do perfil do usuário autenticado
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: Dados do usuário
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ */
+router.get("/perfil", authMiddleware, authorize('Usuário', 'Administrador'), UserController.getProfile);
 
 export default router;
