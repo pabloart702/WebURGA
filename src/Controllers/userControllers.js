@@ -64,6 +64,19 @@ class UserController {
         }
     };
 
+    static async activateUser(req, res, next) {
+        try {
+            const { id } = req.params;
+            const activatedUser = await UserService.activate(id);
+            res.status(200).json({
+                mensagem: "Usuário ativado com sucesso",
+                user: new outUserDTO(activatedUser)
+            });
+        } catch (error) {
+            next(error);
+        }
+    };
+
     static async getProfile(req, res, next) {
         try {
             const id = req.user.id;

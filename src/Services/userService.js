@@ -116,6 +116,12 @@ class UserService {
 
         return await UserRepository.delete(id);
     }
+
+    static async activate(id) {
+        await this.findById(id);
+
+        return await UserRepository.activate(id);
+    }
 }
 
 export default UserService;

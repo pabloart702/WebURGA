@@ -198,7 +198,7 @@ router.patch("/id/:id", authMiddleware, authorize('Usuário', 'Administrador'), 
 
 /**
  * @swagger
- * /users/{id}:
+ * /users/id/{id}:
  *   delete:
  *     summary: Desativa um usuário pelo ID (Soft Delete)
  *     tags: [Users]
@@ -206,7 +206,7 @@ router.patch("/id/:id", authMiddleware, authorize('Usuário', 'Administrador'), 
  *       - in: path
  *         name: id
  *         schema:
- *           type: integer
+ *           type: string
  *         required: true
  *         description: O ID do usuário
  *     responses:
@@ -225,6 +225,36 @@ router.patch("/id/:id", authMiddleware, authorize('Usuário', 'Administrador'), 
  *         description: Usuário não encontrado
  */
 router.delete("/id/:id", authMiddleware, authorize('Administrador'), UserController.deleteUser);
+
+/**
+ * @swagger
+ * /users/id/{id}/ativar:
+ *   patch:
+ *     summary: Ativa um usuário inativo pelo ID
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: O ID do usuário
+ *     responses:
+ *       200:
+ *         description: O usuário foi ativado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 mensagem:
+ *                   type: string
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
+ *       404:
+ *         description: Usuário não encontrado
+ */
+router.patch("/id/:id/ativar", authMiddleware, authorize('Administrador'), UserController.activateUser);
 
 /**
  * @swagger

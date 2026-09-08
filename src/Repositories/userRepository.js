@@ -5,7 +5,7 @@ class UserRepository {
         const limit = 50;
         const skip = (page - 1) * limit;
 
-        const query = {}; console.log("Building query with:", {searchTerm, departamento});
+        const query = {};
         
         if (departamento) {
             query.departamento = departamento;
@@ -64,6 +64,14 @@ class UserRepository {
         return await User.findByIdAndUpdate(
             id,
             { status: "INATIVO" },
+            { new: true }
+        );
+    }
+
+    async activate(id) {
+        return await User.findByIdAndUpdate(
+            id,
+            { status: "ATIVO" },
             { new: true }
         );
     }
