@@ -5,7 +5,7 @@ class UserRepository {
         const limit = 50;
         const skip = (page - 1) * limit;
 
-        const query = {};
+        const query = {}; console.log("Building query with:", {searchTerm, departamento});
         
         if (departamento) {
             query.departamento = departamento;

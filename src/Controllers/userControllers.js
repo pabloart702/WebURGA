@@ -9,7 +9,7 @@ class UserController {
             const page = parseInt(req.query.page) || 1;
             const searchTerm = req.query.search || '';
             const departamento = req.query.departamento || '';
-            const result = await UserService.findAll(page, searchTerm, departamento);
+            console.log("query:", req.query); const result = await UserService.findAll(page, searchTerm, departamento);
 
             // Mapeia apenas os usuários dentro da propriedade 'data' para o DTO
             result.data = result.data.map(user => new outUserDTO(user));

@@ -5,11 +5,6 @@ class UserService {
     static async findAll(page, searchTerm, departamento) {
         if (!page || page < 1) page = 1;
         const users = await UserRepository.findAll(page, searchTerm, departamento);
-        if (!users || !users.data || users.data.length === 0) {
-            const err = new Error("Nenhum usuário encontrado.");
-            err.statusCode = 404;
-            throw err;
-        }
         return users;
     }
 
