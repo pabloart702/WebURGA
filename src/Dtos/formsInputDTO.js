@@ -37,6 +37,7 @@ class UpdateFormsDTO {
         if (payload.tipos_apreendidos !== undefined) this.tipos_apreendidos = payload.tipos_apreendidos;
         if (payload.descricao_operacao !== undefined) this.descricao_operacao = payload.descricao_operacao;
         if (payload.valor_estimado !== undefined) this.valor_estimado = payload.valor_estimado;
+        if (payload.status !== undefined) this.status = payload.status;
     }
 }
 

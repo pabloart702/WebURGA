@@ -17,6 +17,8 @@ export class OutFormsDTO {
         this.descricao_operacao = form.descricao_operacao;
         this.valor_estimado = form.valor_estimado;
         this.status = form.status;
+        this.dataCiente = form.dataCiente;
+        this.dataRealizado = form.dataRealizado;
         this.criador = form.criador; // Pode ser populado ou apenas o ObjectId
         this.createdAt = form.createdAt;
         this.updatedAt = form.updatedAt;

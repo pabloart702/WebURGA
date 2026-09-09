@@ -44,6 +44,12 @@ const formsSchema = new mongoose.Schema({
         type: String,
         default: 'pendente'
     },
+    dataCiente: {
+        type: Date
+    },
+    dataRealizado: {
+        type: Date
+    },
     criador: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

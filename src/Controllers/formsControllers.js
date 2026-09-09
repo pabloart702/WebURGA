@@ -6,8 +6,14 @@ class FormsController {
         try {
             const page = parseInt(req.query.page, 10) || 1;
             const limit = parseInt(req.query.limit, 10) || 10;
+            const status = req.query.status;
+            const departamento = req.query.departamento;
+            const sortBy = req.query.sortBy;
+            const sortOrder = req.query.sortOrder;
 
-            const result = await formsService.getForms(page, limit, req.user);
+            const options = { status, departamento, sortBy, sortOrder };
+
+            const result = await formsService.getForms(page, limit, req.user, options);
             res.status(200).json(result);
         } catch (error) {
             next(error);
