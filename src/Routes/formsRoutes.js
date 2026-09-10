@@ -92,6 +92,18 @@ router.get("/", authMiddleware, authorize('Usuário', 'Administrador'), formsCon
 
 /**
  * @swagger
+ * /forms/dashboard:
+ *   get:
+ *     summary: Retorna os dados estatísticos para o dashboard
+ *     tags: [Forms]
+ *     responses:
+ *       200:
+ *         description: Dados do dashboard
+ */
+router.get("/dashboard", authMiddleware, authorize('Usuário', 'Administrador'), formsController.getDashboardData);
+
+/**
+ * @swagger
  * /forms/{id}:
  *   get:
  *     summary: Retorna um formulário pelo seu ID

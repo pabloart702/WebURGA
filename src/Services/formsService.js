@@ -121,6 +121,10 @@ class FormsService {
         const deletedForm = await formsRepository.remove(id);
         return new OutFormsDTO(deletedForm);
     }
+
+    async getDashboardData() {
+        return await formsRepository.getDashboardMetrics();
+    }
 }
 
 export default new FormsService();

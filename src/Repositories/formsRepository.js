@@ -36,6 +36,46 @@ class FormsRepository {
     async remove(id) {
         return await Forms.findByIdAndUpdate(id, { status: 'cancelado' }, { new: true });
     }
+
+    async getDashboardMetrics() {
+        const apoiosPrestados = await Forms.countDocuments({ status: 'realizado' });
+        const apoiosSolicitados = await Forms.countDocuments();
+        
+        const valorAgg = await Forms.aggregate([
+            { $match: { status: 'realizado' } },
+            { $group: { _id: null, totalValor: { $sum: '$valor_estimado' } } }
+        ]);
+        const totalValorEstimado = valorAgg.length > 0 ? valorAgg[0].totalValor : 0;
+
+        const delegaciasMaisSolicitam = await Forms.aggregate([
+            { $group: { _id: '$departamento', count: { $sum: 1 } } },
+            { $sort: { count: -1 } },
+            { $limit: 6 }
+        ]);
+
+        const tiposMaisApreendidos = await Forms.aggregate([
+            { $unwind: '$tipos_apreendidos' },
+            { $group: { _id: '$tipos_apreendidos', count: { $sum: 1 } } },
+            { $sort: { count: -1 } },
+            { $limit: 6 }
+        ]);
+
+        const resultadosMaisComuns = await Forms.aggregate([
+            { $unwind: '$resultados' },
+            { $group: { _id: '$resultados', count: { $sum: 1 } } },
+            { $sort: { count: -1 } },
+            { $limit: 6 }
+        ]);
+
+        return {
+            apoiosPrestados,
+            apoiosSolicitados,
+            totalValorEstimado,
+            delegaciasMaisSolicitam,
+            tiposMaisApreendidos,
+            resultadosMaisComuns
+        };
+    }
 }
 
 export default new FormsRepository();

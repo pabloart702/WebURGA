@@ -10,3 +10,14 @@ export const loginLimiter = rateLimit({
     standardHeaders: true, // Retorna as informações de rate limit nos cabeçalhos `RateLimit-*`
     legacyHeaders: false, // Desabilita os cabeçalhos `X-RateLimit-*`
 });
+
+export const downloadLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutos
+    max: 10, // Limita cada IP a 10 downloads por `window` (por 15 minutos)
+    message: {
+        mensagem: "Muitos downloads recentes a partir deste IP, por favor tente novamente após 15 minutos."
+    },
+    statusCode: 429,
+    standardHeaders: true, 
+    legacyHeaders: false, 
+});

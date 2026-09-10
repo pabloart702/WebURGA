@@ -71,6 +71,15 @@ class FormsController {
             next(error);
         }
     }
+
+    async getDashboardData(req, res, next) {
+        try {
+            const data = await formsService.getDashboardData();
+            res.status(200).json(data);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 export default new FormsController();
