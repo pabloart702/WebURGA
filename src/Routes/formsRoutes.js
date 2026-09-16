@@ -4,7 +4,7 @@ import { CreateFormsValidator, UpdateFormsValidator } from "../Validators/formsV
 import { authMiddleware } from "../Middlewares/authMiddleware.js";
 import { authorize } from "../Middlewares/permissionMiddleware.js";
 import { validateRequest } from "../Middlewares/errorMiddleware.js";
-
+import { createLimiter } from "../Middlewares/rateLimitMiddleware.js";
 
 const router = Router();
 
@@ -183,7 +183,7 @@ router.get("/:id", authMiddleware, authorize('Usuário', 'Administrador'), forms
  *             schema:
  *               $ref: '#/components/schemas/Forms'
  */
-router.post("/", authMiddleware, authorize('Usuário', 'Administrador'), CreateFormsValidator, validateRequest, formsController.createForms);
+router.post("/", authMiddleware, authorize('Usuário', 'Administrador'), createLimiter, CreateFormsValidator, validateRequest, formsController.createForms);
 
 /**
  * @swagger

@@ -4,6 +4,7 @@ import { createUserValidator, updateUserValidator, updateProfileValidator } from
 import { authMiddleware } from "../Middlewares/authMiddleware.js";
 import { authorize } from "../Middlewares/permissionMiddleware.js";
 import { validateRequest } from "../Middlewares/errorMiddleware.js";
+import { createLimiter, uploadLimiter } from "../Middlewares/rateLimitMiddleware.js";
 import uploadMiddleware from "../Middlewares/uploadMiddleware.js";
 import imageProcessMiddleware from "../Middlewares/imageProcessMiddleware.js";
 
@@ -147,7 +148,7 @@ router.get("/id/:id", authMiddleware, authorize('Administrador'), UserController
  *             schema:
  *               $ref: '#/components/schemas/User'
  */
-router.post("/", authMiddleware, authorize('Administrador'), createUserValidator, validateRequest, UserController.createUser);
+router.post("/", authMiddleware, authorize('Administrador'), createLimiter, createUserValidator, validateRequest, UserController.createUser);
 
 /**
  * @swagger
@@ -336,7 +337,7 @@ router.get("/perfil", authMiddleware, authorize('Usuário', 'Administrador'), Us
  *       401:
  *         description: Não autorizado
  */
-router.patch("/profile-picture", authMiddleware, authorize('Usuário', 'Administrador'), uploadMiddleware.single('profilePicture'), imageProcessMiddleware, UserController.uploadProfilePicture);
+router.patch("/profile-picture", authMiddleware, authorize('Usuário', 'Administrador'), uploadLimiter, uploadMiddleware.single('profilePicture'), imageProcessMiddleware, UserController.uploadProfilePicture);
 
 /**
  * @swagger

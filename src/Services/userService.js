@@ -1,5 +1,6 @@
 import UserRepository from "../Repositories/userRepository.js";
 import bcrypt from 'bcrypt';
+import { deleteProfileImage } from "../Utils/fileUtils.js";
 
 class UserService {
     static async findAll(page, searchTerm, departamento) {
@@ -19,13 +20,7 @@ class UserService {
     }
 
     static async findByEmail(email) {
-        const user = await UserRepository.findByEmail(email);
-        if (!user) {
-            const err = new Error("Email não encontrado.");
-            err.statusCode = 404;
-            throw err;
-        }
-        return user;
+        return await UserRepository.findByEmail(email);
     }
 
     static async create(userData) {
@@ -123,24 +118,27 @@ class UserService {
         return await UserRepository.activate(id);
     }
 
-    
+
     static async deleteProfilePicture(id) {
         const user = await this.findById(id);
         const oldPicture = user.profilePicture;
         user.profilePicture = null;
         await user.save();
-        return { updatedUser: user, oldPicture };
+
+        deleteProfileImage(oldPicture);
+
+        return user;
     }
 
     static async updateProfilePicture(id, filename) {
         const user = await this.findById(id);
-        
-        // Retorna a foto antiga para que o controller possa deletá-class
         const oldPicture = user.profilePicture;
-        
+
         const updatedUser = await UserRepository.update(id, { profilePicture: filename });
-        
-        return { updatedUser, oldPicture };
+
+        deleteProfileImage(oldPicture);
+
+        return updatedUser;
     }
 }
 

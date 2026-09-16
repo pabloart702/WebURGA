@@ -1,4 +1,5 @@
 import User from '../Models/userModel.js';
+import { escapeRegex } from '../Utils/sanitizers.js';
 
 class UserRepository {
     async findAll(page, searchTerm = '', departamento = '') {
@@ -6,16 +7,17 @@ class UserRepository {
         const skip = (page - 1) * limit;
 
         const query = {};
-        
-        if (departamento) {
+
+        if (departamento && typeof departamento === 'string') {
             query.departamento = departamento;
         }
 
-        if (searchTerm) {
+        if (searchTerm && typeof searchTerm === 'string') {
+            const sanitizedSearch = escapeRegex(searchTerm);
             query.$or = [
-                { nome: { $regex: searchTerm, $options: 'i' } },
-                { cpf: { $regex: searchTerm, $options: 'i' } },
-                { matricula: { $regex: searchTerm, $options: 'i' } }
+                { nome: { $regex: sanitizedSearch, $options: 'i' } },
+                { cpf: { $regex: sanitizedSearch, $options: 'i' } },
+                { matricula: { $regex: sanitizedSearch, $options: 'i' } }
             ];
         }
 
@@ -40,8 +42,9 @@ class UserRepository {
     }
 
     async findByNome(nome) {
-        // Usa regex para ignorar case sensitivity
-        return await User.findOne({ nome: new RegExp(`^${nome}$`, 'i') });
+        // Usa regex para ignorar case sensitivity e previne ReDoS/Injection
+        const sanitizedNome = escapeRegex(nome);
+        return await User.findOne({ nome: new RegExp(`^${sanitizedNome}$`, 'i') });
     }
 
     async findByMatricula(matricula) {

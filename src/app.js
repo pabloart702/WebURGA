@@ -12,11 +12,24 @@ import { globalErrorHandler } from './Middlewares/errorMiddleware.js';
 import { authMiddleware } from './Middlewares/authMiddleware.js';
 import { webLog } from './Middlewares/logMiddleware.js';
 import securityHeadersMiddleware from './Middlewares/securityHeadersMiddleware.js';
+import { globalLimiter } from './Middlewares/rateLimitMiddleware.js';
 
 const app = express();
 
-app.use(cors());
-app.use(express.json());
+app.set('trust proxy', 1);
+app.use(globalLimiter);
+
+const corsOptions = {
+    origin: [
+        'http://localhost:5173',        // Frontend (Vite)
+    ],
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: false,
+    maxAge: 86400,
+};
+app.use(cors(corsOptions));
+app.use(express.json({ limit: '100kb' }));
 
 app.use(webLog);
 
@@ -25,18 +38,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const uploadsPath = path.join(__dirname, '../uploads/profiles');
 
-app.use(
-    '/uploads/profiles',
-    authMiddleware,
-    securityHeadersMiddleware,
-    express.static(uploadsPath, {
-        dotfiles: 'deny',
-        index: false
-    })
-);
+app.use('/uploads/profiles', authMiddleware, securityHeadersMiddleware, express.static(uploadsPath, { dotfiles: 'deny', index: false }));
 
-// Swagger UI
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// Swagger UI restrito a ambiente de desenvolvimento
+if (process.env.NODE_ENV !== 'production') {
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+}
 app.use('/auth', authRoutes);
 app.use('/users', authMiddleware, userRoutes);
 app.use('/forms', authMiddleware, formsRoutes);

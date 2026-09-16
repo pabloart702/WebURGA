@@ -10,10 +10,7 @@ class UserController {
             const searchTerm = req.query.search || '';
             const departamento = req.query.departamento || '';
             console.log("query:", req.query); const result = await UserService.findAll(page, searchTerm, departamento);
-
-            // Mapeia apenas os usuários dentro da propriedade 'data' para o DTO
             result.data = result.data.map(user => new outUserDTO(user));
-
             res.status(200).json(result);
         } catch (error) {
             next(error);
@@ -98,27 +95,11 @@ class UserController {
         }
     };
 
-    
+
     static async deleteProfilePicture(req, res, next) {
         try {
             const id = req.user.id;
-            const { updatedUser, oldPicture } = await UserService.deleteProfilePicture(id);
-
-            if (oldPicture) {
-                import('fs').then(fs => {
-                    import('path').then(path => {
-                        import('url').then(url => {
-                            const __filename = url.fileURLToPath(import.meta.url);
-                            const __dirname = path.dirname(__filename);
-                            const oldPath = path.join(__dirname, '../../uploads/profiles', oldPicture);
-                            if (fs.existsSync(oldPath)) {
-                                fs.unlinkSync(oldPath);
-                            }
-                        });
-                    });
-                }).catch(err => console.error('Erro ao deletar imagem antiga', err));
-            }
-
+            const updatedUser = await UserService.deleteProfilePicture(id);
             res.status(200).json({
                 mensagem: 'Foto de perfil removida com sucesso.',
                 user: new outUserDTO(updatedUser)
@@ -133,28 +114,9 @@ class UserController {
             if (!req.file || !req.file.filename) {
                 return res.status(400).json({ error: 'Nenhuma imagem foi processada.' });
             }
-
             const id = req.user.id;
             const newFilename = req.file.filename;
-
-            const { updatedUser, oldPicture } = await UserService.updateProfilePicture(id, newFilename);
-
-            // Deleta a imagem antiga se existir, usando importação dinâmica do fs
-            if (oldPicture) {
-                import('fs').then(fs => {
-                    import('path').then(path => {
-                        import('url').then(url => {
-                            const __filename = url.fileURLToPath(import.meta.url);
-                            const __dirname = path.dirname(__filename);
-                            const oldPath = path.join(__dirname, '../../uploads/profiles', oldPicture);
-                            if (fs.existsSync(oldPath)) {
-                                fs.unlinkSync(oldPath);
-                            }
-                        });
-                    });
-                }).catch(err => console.error("Erro ao deletar imagem antiga", err));
-            }
-
+            const updatedUser = await UserService.updateProfilePicture(id, newFilename);
             res.status(200).json({
                 mensagem: "Foto de perfil atualizada com sucesso.",
                 user: new outUserDTO(updatedUser)
