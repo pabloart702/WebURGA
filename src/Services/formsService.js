@@ -7,6 +7,23 @@ class FormsService {
             inputDto.departamento = reqUser.departamento;
         }
 
+        if (inputDto.status === 'realizado') {
+            const dataOp = inputDto.data_operacao;
+            if (dataOp) {
+                const operationDate = new Date(dataOp);
+                operationDate.setHours(0, 0, 0, 0);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                if (operationDate > today) {
+                    const err = new Error("Não é possível registrar o apoio como realizado se a data da operação for no futuro.");
+                    err.statusCode = 400;
+                    throw err;
+                }
+            }
+            inputDto.dataRealizado = new Date();
+        }
+
         const createdForm = await formsRepository.create(inputDto);
         return new OutFormsDTO(createdForm);
     }
@@ -94,6 +111,19 @@ class FormsService {
                 updateDto.dataCiente = new Date();
             }
             if (updateDto.status === 'realizado') {
+                const dataOp = updateDto.data_operacao || form.data_operacao;
+                if (dataOp) {
+                    const operationDate = new Date(dataOp);
+                    operationDate.setHours(0, 0, 0, 0);
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+
+                    if (operationDate > today) {
+                        const err = new Error("Não é possível marcar o apoio como realizado se a data da operação for no futuro.");
+                        err.statusCode = 400;
+                        throw err;
+                    }
+                }
                 updateDto.dataRealizado = new Date();
             }
         }

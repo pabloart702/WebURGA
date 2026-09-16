@@ -39,6 +39,10 @@ const userSchema = new mongoose.Schema({
     status: {
         type: String,
         default: "ATIVO"
+    },
+    profilePicture: {
+        type: String,
+        default: null
     }
 }, {
     timestamps: true // Cria createdAt e updatedAt automaticamente

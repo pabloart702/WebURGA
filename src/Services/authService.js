@@ -14,6 +14,12 @@ class AuthService {
             throw err;
         }
 
+        if (user.status === 'INATIVO') {
+            const err = new Error("Acesso negado. O seu usuário está inativo no sistema.");
+            err.statusCode = 403; // 403 Forbidden
+            throw err;
+        }
+
         const token = jwt.sign(
             { id: user._id.toString(), email: user.email, role: user.role, departamento: user.departamento },
             process.env.JWT_SECRET,

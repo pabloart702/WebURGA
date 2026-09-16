@@ -4,6 +4,8 @@ import { createUserValidator, updateUserValidator, updateProfileValidator } from
 import { authMiddleware } from "../Middlewares/authMiddleware.js";
 import { authorize } from "../Middlewares/permissionMiddleware.js";
 import { validateRequest } from "../Middlewares/errorMiddleware.js";
+import uploadMiddleware from "../Middlewares/uploadMiddleware.js";
+import imageProcessMiddleware from "../Middlewares/imageProcessMiddleware.js";
 
 const router = Router();
 
@@ -194,7 +196,7 @@ router.post("/", authMiddleware, authorize('Administrador'), createUserValidator
  *       404:
  *         description: Usuário não encontrado
  */
-router.patch("/id/:id", authMiddleware, authorize('Usuário', 'Administrador'), updateUserValidator, validateRequest, UserController.updateUser);
+router.patch("/id/:id", authMiddleware, authorize('Administrador'), updateUserValidator, validateRequest, UserController.updateUser);
 
 /**
  * @swagger
@@ -309,5 +311,47 @@ router.patch("/perfil", authMiddleware, authorize('Usuário', 'Administrador'), 
  *               $ref: '#/components/schemas/User'
  */
 router.get("/perfil", authMiddleware, authorize('Usuário', 'Administrador'), UserController.getProfile);
+
+/**
+ * @swagger
+ * /users/profile-picture:
+ *   patch:
+ *     summary: Atualiza a foto de perfil do usuário autenticado
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               profilePicture:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Foto de perfil atualizada com sucesso
+ *       400:
+ *         description: Erro na imagem enviada
+ *       401:
+ *         description: Não autorizado
+ */
+router.patch("/profile-picture", authMiddleware, authorize('Usuário', 'Administrador'), uploadMiddleware.single('profilePicture'), imageProcessMiddleware, UserController.uploadProfilePicture);
+
+/**
+ * @swagger
+ * /users/profile-picture:
+ *   delete:
+ *     summary: Remove a foto de perfil do usuário autenticado
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: Foto de perfil removida com sucesso
+ *       400:
+ *         description: O usuário não possui foto para remover
+ *       401:
+ *         description: Não autorizado
+ */
+router.delete("/profile-picture", authMiddleware, authorize('Usuário', 'Administrador'), UserController.deleteProfilePicture);
 
 export default router;

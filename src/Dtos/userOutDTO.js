@@ -9,6 +9,7 @@ class outUserDTO {
         this.cargo = user.cargo;
         this.departamento = user.departamento;
         this.status = user.status;
+        this.fotoPerfil = user.profilePicture;
     }
 }
 

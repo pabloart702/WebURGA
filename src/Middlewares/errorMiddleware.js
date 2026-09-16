@@ -19,3 +19,4 @@ export const globalErrorHandler = (error, req, res, next) => {
         message: error.statusCode ? error.message : 'Ocorreu um erro interno no servidor',
     });
 };
+

@@ -1,5 +1,5 @@
 import UserService from '../Services/userService.js';
-import { InputUserDTO, UpdateUserDTO } from '../Dtos/userInputDTO.js';
+import { InputUserDTO, AdminUpdateUserDTO, ProfileUpdateDTO } from '../Dtos/userInputDTO.js';
 import outUserDTO from '../Dtos/userOutDTO.js';
 
 class UserController {
@@ -43,7 +43,7 @@ class UserController {
     static async updateUser(req, res, next) {
         try {
             const { id } = req.params;
-            const updateDTO = new UpdateUserDTO(req.body);
+            const updateDTO = new AdminUpdateUserDTO(req.body);
             const updatedUser = await UserService.update(id, updateDTO);
             res.status(200).json(new outUserDTO(updatedUser));
         } catch (error) {
@@ -90,13 +90,79 @@ class UserController {
     static async updateProfile(req, res, next) {
         try {
             const id = req.user.id;
-            const updateDTO = new UpdateUserDTO(req.body);
+            const updateDTO = new ProfileUpdateDTO(req.body);
             const updatedUser = await UserService.update(id, updateDTO);
             res.status(200).json(new outUserDTO(updatedUser));
         } catch (error) {
             next(error);
         }
     };
+
+    
+    static async deleteProfilePicture(req, res, next) {
+        try {
+            const id = req.user.id;
+            const { updatedUser, oldPicture } = await UserService.deleteProfilePicture(id);
+
+            if (oldPicture) {
+                import('fs').then(fs => {
+                    import('path').then(path => {
+                        import('url').then(url => {
+                            const __filename = url.fileURLToPath(import.meta.url);
+                            const __dirname = path.dirname(__filename);
+                            const oldPath = path.join(__dirname, '../../uploads/profiles', oldPicture);
+                            if (fs.existsSync(oldPath)) {
+                                fs.unlinkSync(oldPath);
+                            }
+                        });
+                    });
+                }).catch(err => console.error('Erro ao deletar imagem antiga', err));
+            }
+
+            res.status(200).json({
+                mensagem: 'Foto de perfil removida com sucesso.',
+                user: new outUserDTO(updatedUser)
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    static async uploadProfilePicture(req, res, next) {
+        try {
+            if (!req.file || !req.file.filename) {
+                return res.status(400).json({ error: 'Nenhuma imagem foi processada.' });
+            }
+
+            const id = req.user.id;
+            const newFilename = req.file.filename;
+
+            const { updatedUser, oldPicture } = await UserService.updateProfilePicture(id, newFilename);
+
+            // Deleta a imagem antiga se existir, usando importação dinâmica do fs
+            if (oldPicture) {
+                import('fs').then(fs => {
+                    import('path').then(path => {
+                        import('url').then(url => {
+                            const __filename = url.fileURLToPath(import.meta.url);
+                            const __dirname = path.dirname(__filename);
+                            const oldPath = path.join(__dirname, '../../uploads/profiles', oldPicture);
+                            if (fs.existsSync(oldPath)) {
+                                fs.unlinkSync(oldPath);
+                            }
+                        });
+                    });
+                }).catch(err => console.error("Erro ao deletar imagem antiga", err));
+            }
+
+            res.status(200).json({
+                mensagem: "Foto de perfil atualizada com sucesso.",
+                user: new outUserDTO(updatedUser)
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 export default UserController;

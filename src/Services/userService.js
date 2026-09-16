@@ -122,6 +122,26 @@ class UserService {
 
         return await UserRepository.activate(id);
     }
+
+    
+    static async deleteProfilePicture(id) {
+        const user = await this.findById(id);
+        const oldPicture = user.profilePicture;
+        user.profilePicture = null;
+        await user.save();
+        return { updatedUser: user, oldPicture };
+    }
+
+    static async updateProfilePicture(id, filename) {
+        const user = await this.findById(id);
+        
+        // Retorna a foto antiga para que o controller possa deletá-class
+        const oldPicture = user.profilePicture;
+        
+        const updatedUser = await UserRepository.update(id, { profilePicture: filename });
+        
+        return { updatedUser, oldPicture };
+    }
 }
 
 export default UserService;

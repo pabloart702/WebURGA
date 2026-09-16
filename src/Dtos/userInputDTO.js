@@ -14,16 +14,27 @@ class InputUserDTO {
     }
 }
 
-class UpdateUserDTO {
+class AdminUpdateUserDTO {
     constructor(payload) {
         if (payload.nome !== undefined) this.nome = payload.nome;
         if (payload.email !== undefined) this.email = payload.email;
         if (payload.password !== undefined) this.password = payload.password;
         if (payload.cargo !== undefined) this.cargo = payload.cargo;
+        if (payload.cpf !== undefined) this.cpf = payload.cpf;
+        if (payload.matricula !== undefined) this.matricula = payload.matricula;
         if (payload.role !== undefined) this.role = payload.role;
         if (payload.departamento !== undefined) this.departamento = payload.departamento;
         if (payload.status !== undefined) this.status = payload.status;
     }
 }
 
-export { InputUserDTO, UpdateUserDTO };
+class ProfileUpdateDTO {
+    constructor(payload) {
+        if (payload.nome !== undefined) this.nome = payload.nome;
+        if (payload.email !== undefined) this.email = payload.email;
+        if (payload.password !== undefined) this.password = payload.password;
+        if (payload.cargo !== undefined) this.cargo = payload.cargo;
+    }
+}
+
+export { InputUserDTO, AdminUpdateUserDTO, ProfileUpdateDTO };
