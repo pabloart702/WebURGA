@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import swaggerUi from 'swagger-ui-express';
@@ -15,6 +16,9 @@ import securityHeadersMiddleware from './Middlewares/securityHeadersMiddleware.j
 import { globalLimiter } from './Middlewares/rateLimitMiddleware.js';
 
 const app = express();
+app.use(helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" }, frameguard: { action: 'deny' }
+}));
 
 app.set('trust proxy', 1);
 app.use(globalLimiter);
@@ -40,7 +44,6 @@ const uploadsPath = path.join(__dirname, '../uploads/profiles');
 
 app.use('/uploads/profiles', authMiddleware, securityHeadersMiddleware, express.static(uploadsPath, { dotfiles: 'deny', index: false }));
 
-// Swagger UI restrito a ambiente de desenvolvimento
 if (process.env.NODE_ENV !== 'production') {
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 }

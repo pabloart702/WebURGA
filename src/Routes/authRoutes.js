@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import AuthController from '../Controllers/authController.js';
 import { loginLimiter } from '../Middlewares/rateLimitMiddleware.js';
+import { loginValidator } from '../Validators/authValidator.js';
+import { validateRequest } from '../Middlewares/errorMiddleware.js';
 
 const router = Router();
 
@@ -46,6 +48,6 @@ const router = Router();
  *       429:
  *         description: Muitas requisições (Rate Limit)
  */
-router.post("/login", loginLimiter, AuthController.login);
+router.post("/login", loginLimiter, loginValidator, validateRequest, AuthController.login);
 
 export default router;

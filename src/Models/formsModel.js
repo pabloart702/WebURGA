@@ -59,4 +59,9 @@ const formsSchema = new mongoose.Schema({
     timestamps: true
 });
 
+// Índices para otimização das consultas (Dashboard e Listagens)
+formsSchema.index({ departamento: 1 });
+formsSchema.index({ status: 1 });
+formsSchema.index({ createdAt: -1 });
+
 export default mongoose.model('Forms', formsSchema);

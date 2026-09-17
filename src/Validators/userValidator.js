@@ -1,4 +1,4 @@
-import { body } from 'express-validator';
+import { body, checkExact } from 'express-validator';
 import { validateRequest } from '../Middlewares/errorMiddleware.js';
 import { UNIDADES_POLICIAIS_VALIDAS } from '../Constants/unidades.js';
 import { cpf } from 'cpf-cnpj-validator';
@@ -86,7 +86,8 @@ export const createUserValidator = [
 ];
 
 export const updateUserValidator = [
-    body('nome')
+    checkExact([
+        body('nome')
         .optional()
         .isString().withMessage('Nome deve ser um texto')
         .bail()
@@ -155,13 +156,15 @@ export const updateUserValidator = [
         .isString().withMessage('Formato de status inválido')
         .bail()
         .trim()
-        .isIn(['Ativo', 'Inativo']).withMessage('Status deve ser Ativo ou Inativo'),
+        .isIn(['Ativo', 'Inativo']).withMessage('Status deve ser Ativo ou Inativo')
+    ], { message: 'Campos adicionais não são permitidos nesta requisição.' }),
 
     validateRequest
 ];
 
 export const updateProfileValidator = [
-    body('nome')
+    checkExact([
+        body('nome')
         .optional()
         .isString().withMessage('Nome deve ser um texto')
         .bail()
@@ -214,7 +217,8 @@ export const updateProfileValidator = [
 
     body('status')
         .not().exists()
-        .withMessage('O status não pode ser alterado pelo perfil'),
+        .withMessage('O status não pode ser alterado pelo perfil')
+    ], { message: 'Campos adicionais não são permitidos nesta requisição.' }),
 
     validateRequest
 ];

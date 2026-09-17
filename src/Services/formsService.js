@@ -82,10 +82,10 @@ class FormsService {
             throw err;
         }
 
-        // Regra de Negócio: Usuário só pode atualizar forms do seu departamento
+        // Regra de Negócio: Usuário só pode atualizar seus próprios formulários
         if (reqUser.role !== 'Administrador') {
-            if (form.departamento !== reqUser.departamento) {
-                const err = new Error("Acesso negado. O formulário não pertence ao seu departamento.");
+            if (form.criador._id.toString() !== reqUser.id) {
+                const err = new Error("Acesso negado. Você só pode modificar os formulários que você mesmo criou.");
                 err.statusCode = 403;
                 throw err;
             }
@@ -141,8 +141,8 @@ class FormsService {
         }
 
         if (reqUser && reqUser.role !== 'Administrador') {
-            if (form.departamento !== reqUser.departamento) {
-                const err = new Error("Acesso negado. O formulário não pertence ao seu departamento.");
+            if (form.criador._id.toString() !== reqUser.id) {
+                const err = new Error("Acesso negado. Você só pode deletar os formulários que você mesmo criou.");
                 err.statusCode = 403;
                 throw err;
             }
