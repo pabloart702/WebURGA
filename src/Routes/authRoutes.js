@@ -50,4 +50,24 @@ const router = Router();
  */
 router.post("/login", loginLimiter, loginValidator, validateRequest, AuthController.login);
 
+/**
+ * @swagger
+ * /auth/logout:
+ *   post:
+ *     summary: Realiza o logout invalidando o cookie HttpOnly
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: Logout bem-sucedido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Logout realizado com sucesso."
+ */
+router.post("/logout", AuthController.logout);
+
 export default router;

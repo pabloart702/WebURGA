@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import swaggerUi from 'swagger-ui-express';
@@ -29,10 +30,11 @@ const corsOptions = {
     ],
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: false,
+    credentials: true,  // Obrigatório para cookies cross-origin (HttpOnly JWT)
     maxAge: 86400,
 };
 app.use(cors(corsOptions));
+app.use(cookieParser()); // Habilita leitura de req.cookies
 app.use(express.json({ limit: '100kb' }));
 
 app.use(webLog);
