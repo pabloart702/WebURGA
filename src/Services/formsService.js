@@ -10,12 +10,12 @@ class FormsService {
         if (inputDto.status === 'realizado') {
             const dataOp = inputDto.data_operacao;
             if (dataOp) {
-                const operationDate = new Date(dataOp);
-                operationDate.setHours(0, 0, 0, 0);
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
+                let operationDateStr = typeof dataOp === 'string' ? dataOp.split('T')[0] : dataOp.toISOString().split('T')[0];
 
-                if (operationDate > today) {
+                const today = new Date();
+                const todayStr = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, '0') + "-" + String(today.getDate()).padStart(2, '0');
+
+                if (operationDateStr > todayStr) {
                     const err = new Error("Não é possível registrar o apoio como realizado se a data da operação for no futuro.");
                     err.statusCode = 400;
                     throw err;
@@ -113,12 +113,12 @@ class FormsService {
             if (updateDto.status === 'realizado') {
                 const dataOp = updateDto.data_operacao || form.data_operacao;
                 if (dataOp) {
-                    const operationDate = new Date(dataOp);
-                    operationDate.setHours(0, 0, 0, 0);
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
+                    let operationDateStr = typeof dataOp === 'string' ? dataOp.split('T')[0] : dataOp.toISOString().split('T')[0];
 
-                    if (operationDate > today) {
+                    const today = new Date();
+                    const todayStr = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, '0') + "-" + String(today.getDate()).padStart(2, '0');
+
+                    if (operationDateStr > todayStr) {
                         const err = new Error("Não é possível marcar o apoio como realizado se a data da operação for no futuro.");
                         err.statusCode = 400;
                         throw err;
