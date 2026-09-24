@@ -144,3 +144,6 @@ vite.config.ts.timestamp-*
 
 # Agents
 .agents/
+
+# Uploads de usuários (imagens de perfil)
+uploads/
