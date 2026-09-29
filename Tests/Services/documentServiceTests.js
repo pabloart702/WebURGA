@@ -25,10 +25,15 @@ describe('DocumentService tests', () => {
   });
 
   describe('getDocumentByFilename', () => {
-    it('deve retornar null se não encontrar o arquivo', async () => {
+    it('deve lançar erro 404 se não encontrar o arquivo', async () => {
       jest.spyOn(documentRepository, 'findByFilename').mockResolvedValue([]);
-      const result = await documentService.getDocumentByFilename('teste.pdf');
-      expect(result).toBeNull();
+      
+      await expect(documentService.getDocumentByFilename('teste.pdf')).rejects.toThrow('Documento não encontrado.');
+      try {
+        await documentService.getDocumentByFilename('teste.pdf');
+      } catch (err) {
+        expect(err.statusCode).toBe(404);
+      }
     });
 
     it('deve retornar o primeiro arquivo se encontrar', async () => {

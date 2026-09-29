@@ -3,6 +3,7 @@ import express from 'express';
 import { jest } from '@jest/globals';
 import documentRoutes from '../../src/Routes/documentRoutes.js';
 import documentService from '../../src/Services/documentService.js';
+import { globalErrorHandler } from '../../src/Middlewares/errorMiddleware.js';
 
 describe('Document Routes Tests', () => {
   let app;
@@ -11,6 +12,7 @@ describe('Document Routes Tests', () => {
     app = express();
     app.use(express.json());
     app.use('/documents', documentRoutes);
+    app.use(globalErrorHandler);
   });
 
   beforeEach(() => {
@@ -30,7 +32,9 @@ describe('Document Routes Tests', () => {
 
   describe('GET /documents/:filename', () => {
     it('deve retornar 404 se não encontrar (validando que a rota está ativa)', async () => {
-      jest.spyOn(documentService, 'getDocumentByFilename').mockResolvedValue(null);
+      const mockError = new Error("Documento não encontrado.");
+      mockError.statusCode = 404;
+      jest.spyOn(documentService, 'getDocumentByFilename').mockRejectedValue(mockError);
 
       const response = await request(app).get('/documents/naoexiste.pdf');
 

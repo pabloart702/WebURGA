@@ -3,8 +3,8 @@ import documentRepository from '../Repositories/documentRepository.js';
 class DocumentService {
     async getAllDocuments() {
         const files = await documentRepository.findAll();
-        
-        // Map to a cleaner format for the frontend
+
+        // Mapear para um formato mais limpo para o frontend
         return files.map(file => ({
             id: file._id,
             filename: file.filename,
@@ -18,7 +18,9 @@ class DocumentService {
     async getDocumentByFilename(filename) {
         const files = await documentRepository.findByFilename(filename);
         if (files.length === 0) {
-            return null;
+            const err = new Error("Documento não encontrado.");
+            err.statusCode = 404;
+            throw err;
         }
         return files[0];
     }

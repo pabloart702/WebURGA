@@ -1,7 +1,7 @@
 import documentService from '../Services/documentService.js';
 
 class DocumentController {
-    // Returns a list of all documents available
+    // Retorna uma lista de todos os documentos disponíveis
     async getAllDocuments(req, res, next) {
         try {
             const result = await documentService.getAllDocuments();
@@ -11,29 +11,25 @@ class DocumentController {
         }
     }
 
-    // Streams a specific document back to the client
+    // Transmite um documento específico de volta para o cliente
     async downloadDocument(req, res, next) {
         try {
             const { filename } = req.params;
-            
-            const file = await documentService.getDocumentByFilename(filename);
-            
-            if (!file) {
-                return res.status(404).json({ message: "Documento não encontrado." });
-            }
 
-            // Set appropriate headers for the PDF
+            const file = await documentService.getDocumentByFilename(filename);
+
+            // Defina os cabeçalhos apropriados para o PDF.
             res.set({
                 'Content-Type': file.contentType || 'application/pdf',
                 'Content-Disposition': `inline; filename="${file.filename}"`,
                 'Content-Length': file.length
             });
 
-            // Open download stream and pipe it to response
+            // Abra o fluxo de download e direcione-o para a resposta.
             const downloadStream = documentService.getDownloadStream(filename);
-            
+
             downloadStream.on('error', (err) => {
-                console.error("Error streaming file:", err);
+                console.error("Erro ao transmitir o arquivo:", err);
                 res.status(500).json({ message: "Erro ao baixar o documento." });
             });
 

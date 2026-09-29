@@ -36,8 +36,8 @@ describe('Auth Validator Tests', () => {
   it('deve falhar se os campos excederem o tamanho máximo ou não forem strings', async () => {
     const req = {
       body: {
-        email: 12345, // não é string
-        password: 'a'.repeat(150) // maior que 50
+        email: 12345,
+        password: 'a'.repeat(150)
       }
     };
 
@@ -45,7 +45,7 @@ describe('Auth Validator Tests', () => {
     expect(result.isEmpty()).toBe(false);
 
     const errors = result.array().map(e => e.msg);
-    expect(errors).toContain('O email deve ser uma string.');
-    expect(errors).toContain('A senha excede o tamanho máximo permitido.');
+    expect(errors).toContain('O email deve ser um texto.');
+    expect(errors).toContain('A senha excede o tamanho máximo.');
   });
 });

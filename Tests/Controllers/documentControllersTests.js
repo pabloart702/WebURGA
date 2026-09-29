@@ -31,14 +31,16 @@ describe('DocumentController tests', () => {
   });
 
   describe('downloadDocument', () => {
-    it('deve retornar 404 se o documento não for encontrado', async () => {
+    it('deve repassar o erro para next se o documento não for encontrado', async () => {
       req.params.filename = 'naoexiste.pdf';
-      jest.spyOn(documentService, 'getDocumentByFilename').mockResolvedValue(null);
+      const mockError = new Error("Documento não encontrado.");
+      mockError.statusCode = 404;
+      jest.spyOn(documentService, 'getDocumentByFilename').mockRejectedValue(mockError);
 
       await DocumentController.downloadDocument(req, res, next);
 
-      expect(res.status).toHaveBeenCalledWith(404);
-      expect(res.json).toHaveBeenCalledWith({ message: "Documento não encontrado." });
+      expect(next).toHaveBeenCalledWith(mockError);
+      expect(res.status).not.toHaveBeenCalled();
     });
 
     it('deve configurar headers e realizar o pipe do stream', async () => {
