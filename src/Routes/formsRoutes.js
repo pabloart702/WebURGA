@@ -1,10 +1,9 @@
 import { Router } from "express";
 import formsController from "../Controllers/formsControllers.js";
 import { CreateFormsValidator, UpdateFormsValidator } from "../Validators/formsValidator.js";
-import { authMiddleware } from "../Middlewares/authMiddleware.js";
-import { authorize } from "../Middlewares/permissionMiddleware.js";
+import { authMiddleware, authorize } from "../Middlewares/authMiddleware.js";
 import { validateRequest } from "../Middlewares/errorMiddleware.js";
-import { createLimiter } from "../Middlewares/rateLimitMiddleware.js";
+import { createLimiter } from "../Middlewares/securityMiddleware.js";
 
 const router = Router();
 

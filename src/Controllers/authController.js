@@ -6,7 +6,7 @@ const cookieOptions = {
     secure: process.env.NODE_ENV === 'production',           // HTTPS obrigatório apenas em prod
     sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax', // 'lax' permite dev cross-origin
     path: '/',
-    maxAge: 60 * 60 * 1000,                                 // 1 hora (em ms)
+    maxAge: 20 * 60 * 1000,                                 // 20 minutos (em ms)
 };
 
 class AuthController {

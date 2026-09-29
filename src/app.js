@@ -13,8 +13,7 @@ import documentRoutes from './Routes/documentRoutes.js';
 import { globalErrorHandler } from './Middlewares/errorMiddleware.js';
 import { authMiddleware } from './Middlewares/authMiddleware.js';
 import { webLog } from './Middlewares/logMiddleware.js';
-import securityHeadersMiddleware from './Middlewares/securityHeadersMiddleware.js';
-import { globalLimiter } from './Middlewares/rateLimitMiddleware.js';
+import { globalLimiter, securityHeadersMiddleware } from './Middlewares/securityMiddleware.js';
 
 const app = express();
 app.use(helmet({
@@ -52,7 +51,13 @@ if (process.env.NODE_ENV !== 'production') {
 app.use('/auth', authRoutes);
 app.use('/users', authMiddleware, userRoutes);
 app.use('/forms', authMiddleware, formsRoutes);
-app.use('/api/documentos', authMiddleware, documentRoutes);
+app.use('/documentos', authMiddleware, documentRoutes);
+
+app.use((req, res, next) => {
+    const error = new Error(`Rota não encontrada`);
+    error.statusCode = 404;
+    next(error);
+});
 
 app.use(globalErrorHandler);
 

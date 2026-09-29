@@ -1,12 +1,10 @@
 import { Router } from "express";
 import UserController from "../Controllers/userControllers.js";
 import { createUserValidator, updateUserValidator, updateProfileValidator } from "../Validators/userValidator.js";
-import { authMiddleware } from "../Middlewares/authMiddleware.js";
-import { authorize } from "../Middlewares/permissionMiddleware.js";
+import { authMiddleware, authorize } from "../Middlewares/authMiddleware.js";
 import { validateRequest } from "../Middlewares/errorMiddleware.js";
-import { createLimiter, uploadLimiter } from "../Middlewares/rateLimitMiddleware.js";
-import uploadMiddleware from "../Middlewares/uploadMiddleware.js";
-import imageProcessMiddleware from "../Middlewares/imageProcessMiddleware.js";
+import { createLimiter, uploadLimiter } from "../Middlewares/securityMiddleware.js";
+import { uploadMiddleware, imageProcessMiddleware } from "../Middlewares/uploadMiddleware.js";
 
 const router = Router();
 

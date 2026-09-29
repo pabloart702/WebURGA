@@ -9,14 +9,15 @@ export const globalLimiter = rateLimit({
 });
 
 export const loginLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutos
-    max: 15, // Limita cada IP a 15 requisições por `window` (por 15 minutos)
+    windowMs: 5 * 60 * 1000, // 5 minutos
+    max: 5, // Limita cada IP a 5 requisições por `window` (por 5 minutos)
     message: {
-        mensagem: "Muitas tentativas de login a partir deste IP, por favor tente novamente após 15 minutos."
+        mensagem: "Muitas tentativas de login a partir deste IP, por favor tente novamente após 5 minutos."
     },
     statusCode: 429,
     standardHeaders: true, // Retorna as informações de rate limit nos cabeçalhos `RateLimit-*`
     legacyHeaders: false, // Desabilita os cabeçalhos `X-RateLimit-*`
+    skip: (req) => req.method === 'OPTIONS', // Ignora requisições preflight do CORS
 });
 
 export const downloadLimiter = rateLimit({
@@ -51,3 +52,11 @@ export const createLimiter = rateLimit({
     standardHeaders: true,
     legacyHeaders: false,
 });
+
+export const securityHeadersMiddleware = (req, res, next) => {
+    // Cabeçalhos de segurança essenciais para impedir XSS e Sniffing
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Content-Security-Policy', "default-src 'none'");
+    res.setHeader('Content-Disposition', 'inline');
+    next();
+};

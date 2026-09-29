@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { downloadLimiter } from "../Middlewares/rateLimitMiddleware.js";
+import { downloadLimiter } from "../Middlewares/securityMiddleware.js";
 import documentController from "../Controllers/documentControllers.js";
 
 const router = Router();

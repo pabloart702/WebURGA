@@ -21,6 +21,7 @@ export const CreateFormsValidator = [
         .notEmpty().withMessage('Data da operação é obrigatória')
         .matches(/^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/]\d{4}$/).withMessage('Data da operação deve estar no formato DD/MM/YYYY ou DD-MM-YYYY')
         .customSanitizer(val => {
+            if (!val) return val;
             const parts = val.split(/[-/]/);
             return `${parts[2]}-${parts[1]}-${parts[0]}`; // Converter para YYYY-MM-DD para compatibilidade com Node e MongoDB
         }),
@@ -103,8 +104,9 @@ export const UpdateFormsValidator = [
         .optional()
         .matches(/^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/]\d{4}$/).withMessage('Data da operação deve estar no formato DD/MM/YYYY ou DD-MM-YYYY')
         .customSanitizer(val => {
+            if (!val) return val;
             const parts = val.split(/[-/]/);
-            return `${parts[2]}-${parts[1]}-${parts[0]}`; // Converter para YYYY-MM-DD para compatibilidade com Node e MongoDB
+            return `${parts[2]}-${parts[1]}-${parts[0]}`;
         }),
     body('numero_processo')
         .optional()
