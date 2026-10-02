@@ -82,7 +82,7 @@ class FormsService {
             throw err;
         }
 
-        // Regra de Negócio: Usuário só pode atualizar seus próprios formulários
+        // Usuário só pode atualizar seus próprios formulários
         if (reqUser.role !== 'Administrador') {
             if (form.criador._id.toString() !== reqUser.id) {
                 const err = new Error("Acesso negado. Você só pode modificar os formulários que você mesmo criou.");
@@ -91,7 +91,7 @@ class FormsService {
             }
         }
 
-        // Regra de Negócio: Apenas ADMINISTRADOR pode alterar o departamento
+        // Apenas ADMINISTRADOR pode alterar o departamento
         if (updateDto.departamento && updateDto.departamento !== form.departamento) {
             if (reqUser.role !== 'Administrador') {
                 const err = new Error("Apenas administradores podem alterar o departamento do formulário.");
@@ -100,7 +100,7 @@ class FormsService {
             }
         }
 
-        // Regra de Negócio: Apenas ADMINISTRADOR pode alterar o status
+        // Apenas ADMINISTRADOR pode alterar o status
         if (updateDto.status && updateDto.status !== form.status) {
             if (reqUser.role !== 'Administrador') {
                 const err = new Error("Apenas administradores podem alterar o status do formulário.");

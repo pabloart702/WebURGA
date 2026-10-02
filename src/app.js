@@ -43,8 +43,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const uploadsPath = path.join(__dirname, '../uploads/profiles');
 
-app.use('/uploads/profiles', authMiddleware, securityHeadersMiddleware, express.static(uploadsPath, { dotfiles: 'deny', index: false }));
-
 if (process.env.NODE_ENV !== 'production') {
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 }
@@ -52,6 +50,7 @@ app.use('/auth', authRoutes);
 app.use('/users', authMiddleware, userRoutes);
 app.use('/forms', authMiddleware, formsRoutes);
 app.use('/documentos', authMiddleware, documentRoutes);
+app.use('/uploads/profiles', authMiddleware, securityHeadersMiddleware, express.static(uploadsPath, { dotfiles: 'deny', index: false }));
 
 app.use((req, res, next) => {
     const error = new Error(`Rota não encontrada`);
