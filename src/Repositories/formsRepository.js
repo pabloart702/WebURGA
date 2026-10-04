@@ -1,12 +1,12 @@
 import Forms from '../Models/formsModel.js';
 
 class FormsRepository {
-    async create(formsData) {
+    static async create(formsData) {
         const form = new Forms(formsData);
         return await form.save();
     }
 
-    async findAll(page = 1, limit = 10, filter = {}, sort = { createdAt: -1 }) {
+    static async findAll(page = 1, limit = 10, filter = {}, sort = { createdAt: -1 }) {
         const skip = (page - 1) * limit;
 
         const forms = await Forms.find(filter)
@@ -25,19 +25,19 @@ class FormsRepository {
         };
     }
 
-    async findById(id) {
+    static async findById(id) {
         return await Forms.findById(id).populate('criador', 'nome cpf');
     }
 
-    async update(id, updateData) {
+    static async update(id, updateData) {
         return await Forms.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
     }
 
-    async remove(id) {
+    static async remove(id) {
         return await Forms.findByIdAndUpdate(id, { status: 'cancelado' }, { new: true });
     }
 
-    async getDashboardMetrics() {
+    static async getDashboardMetrics() {
         const apoiosPrestados = await Forms.countDocuments({ status: 'realizado' });
         const apoiosSolicitados = await Forms.countDocuments();
         
@@ -78,4 +78,4 @@ class FormsRepository {
     }
 }
 
-export default new FormsRepository();
+export default FormsRepository;

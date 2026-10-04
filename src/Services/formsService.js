@@ -1,8 +1,7 @@
-import formsRepository from '../Repositories/formsRepository.js';
-import { OutFormsDTO } from '../Dtos/formsOutDTO.js';
+import FormsRepository from '../Repositories/formsRepository.js';
 
 class FormsService {
-    async createForms(inputDto, reqUser) {
+    static async createForms(inputDto, reqUser) {
         if (reqUser.role !== 'Administrador') {
             inputDto.departamento = reqUser.departamento;
         }
@@ -24,11 +23,11 @@ class FormsService {
             inputDto.dataRealizado = new Date();
         }
 
-        const createdForm = await formsRepository.create(inputDto);
-        return new OutFormsDTO(createdForm);
+        const createdForm = await FormsRepository.create(inputDto);
+        return createdForm;
     }
 
-    async getForms(page = 1, limit = 10, reqUser, options = {}) {
+    static async getForms(page = 1, limit = 10, reqUser, options = {}) {
         const filter = {};
         if (reqUser && reqUser.role !== 'Administrador') {
             filter.departamento = reqUser.departamento;
@@ -45,18 +44,18 @@ class FormsService {
             sort = { [options.sortBy]: options.sortOrder === 'asc' ? 1 : -1 };
         }
 
-        const { forms, total, totalPages } = await formsRepository.findAll(page, limit, filter, sort);
+        const { forms, total, totalPages } = await FormsRepository.findAll(page, limit, filter, sort);
 
         return {
-            forms: forms.map(form => new OutFormsDTO(form)),
+            forms,
             total,
             page,
             totalPages
         };
     }
 
-    async getFormsById(id, reqUser) {
-        const form = await formsRepository.findById(id);
+    static async getFormsById(id, reqUser) {
+        const form = await FormsRepository.findById(id);
         if (!form) {
             const err = new Error("Formulário não encontrado");
             err.statusCode = 404;
@@ -71,11 +70,11 @@ class FormsService {
             }
         }
 
-        return new OutFormsDTO(form);
+        return form;
     }
 
-    async updateForms(id, updateDto, reqUser) {
-        const form = await formsRepository.findById(id);
+    static async updateForms(id, updateDto, reqUser) {
+        const form = await FormsRepository.findById(id);
         if (!form) {
             const err = new Error("Formulário não encontrado");
             err.statusCode = 404;
@@ -128,12 +127,12 @@ class FormsService {
             }
         }
 
-        const updatedForm = await formsRepository.update(id, updateDto);
-        return new OutFormsDTO(updatedForm);
+        const updatedForm = await FormsRepository.update(id, updateDto);
+        return updatedForm;
     }
 
-    async deleteForms(id, reqUser) {
-        const form = await formsRepository.findById(id);
+    static async deleteForms(id, reqUser) {
+        const form = await FormsRepository.findById(id);
         if (!form) {
             const err = new Error("Formulário não encontrado");
             err.statusCode = 404;
@@ -148,13 +147,13 @@ class FormsService {
             }
         }
 
-        const deletedForm = await formsRepository.remove(id);
-        return new OutFormsDTO(deletedForm);
+        const deletedForm = await FormsRepository.remove(id);
+        return deletedForm;
     }
 
-    async getDashboardData() {
-        return await formsRepository.getDashboardMetrics();
+    static async getDashboardData() {
+        return await FormsRepository.getDashboardMetrics();
     }
 }
 
-export default new FormsService();
+export default FormsService;

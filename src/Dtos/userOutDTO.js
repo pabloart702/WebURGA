@@ -1,4 +1,4 @@
-class outUserDTO {
+class OutUserDTO {
     constructor(user) {
         this.id = user._id;
         this.nome = user.nome;
@@ -13,4 +13,5 @@ class outUserDTO {
     }
 }
 
-export default outUserDTO;
+export { OutUserDTO };
+export default OutUserDTO;

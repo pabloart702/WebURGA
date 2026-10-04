@@ -1,5 +1,4 @@
 import { body, checkExact } from 'express-validator';
-import { validateRequest } from '../Middlewares/errorMiddleware.js';
 import { UNIDADES_POLICIAIS_VALIDAS } from '../Constants/unidades.js';
 import { cpf } from 'cpf-cnpj-validator';
 
@@ -80,9 +79,7 @@ export const createUserValidator = [
         .isString().withMessage('Formato de status inválido')
         .bail()
         .trim()
-        .isIn(['Ativo', 'Inativo']).withMessage('Status deve ser Ativo ou Inativo'),
-
-    validateRequest,
+        .isIn(['Ativo', 'Inativo']).withMessage('Status deve ser Ativo ou Inativo')
 ];
 
 export const updateUserValidator = [
@@ -157,9 +154,7 @@ export const updateUserValidator = [
         .bail()
         .trim()
         .isIn(['Ativo', 'Inativo']).withMessage('Status deve ser Ativo ou Inativo')
-    ], { message: 'Campos adicionais não são permitidos nesta requisição.' }),
-
-    validateRequest
+    ], { message: 'Campos adicionais não são permitidos nesta requisição.' })
 ];
 
 export const updateProfileValidator = [
@@ -218,7 +213,5 @@ export const updateProfileValidator = [
     body('status')
         .not().exists()
         .withMessage('O status não pode ser alterado pelo perfil')
-    ], { message: 'Campos adicionais não são permitidos nesta requisição.' }),
-
-    validateRequest
+    ], { message: 'Campos adicionais não são permitidos nesta requisição.' })
 ];

@@ -1,6 +1,6 @@
-import outUserDTO from '../../src/Dtos/userOutDTO.js';
+import OutUserDTO from '../../src/Dtos/userOutDTO.js';
 
-describe('userOutDTO tests', () => {
+describe('OutUserDTO tests', () => {
   it('deve formatar o objeto do usuário mapeando _id para id e profilePicture para fotoPerfil', () => {
     const mockUser = {
       _id: 'mongo-id-123',
@@ -15,7 +15,7 @@ describe('userOutDTO tests', () => {
       profilePicture: 'foto.jpg'
     };
 
-    const dto = new outUserDTO(mockUser);
+    const dto = new OutUserDTO(mockUser);
 
     expect(dto.id).toBe('mongo-id-123');
     expect(dto.nome).toBe('Carlos');

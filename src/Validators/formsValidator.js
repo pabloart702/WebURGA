@@ -1,5 +1,4 @@
 import { body } from 'express-validator';
-import { validateRequest } from '../Middlewares/errorMiddleware.js';
 import { UNIDADES_POLICIAIS_VALIDAS } from '../Constants/unidades.js';
 import { BENS_VALIDOS } from '../Constants/bens.js';
 
@@ -84,8 +83,7 @@ export const CreateFormsValidator = [
     body('valor_estimado')
         .notEmpty().withMessage('O valor estimado total da operação é obrigatório')
         .isNumeric().withMessage('O valor estimado total da operação deve ser um número')
-        .toFloat(),
-    validateRequest
+        .toFloat()
 ];
 
 export const UpdateFormsValidator = [
@@ -169,6 +167,5 @@ export const UpdateFormsValidator = [
     body('valor_estimado')
         .optional()
         .isNumeric().withMessage('O valor estimado total da operação deve ser um número')
-        .toFloat(),
-    validateRequest
+        .toFloat()
 ];

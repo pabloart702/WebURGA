@@ -25,7 +25,7 @@ describe('FormsController tests', () => {
 
       expect(formsService.createForms).toHaveBeenCalledWith(expect.any(InputFormsDTO), req.user);
       expect(res.status).toHaveBeenCalledWith(201);
-      expect(res.json).toHaveBeenCalledWith({ id: 'form-id' });
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ id: 'form-id' }));
     });
   });
 
@@ -64,7 +64,7 @@ describe('FormsController tests', () => {
 
       expect(formsService.deleteForms).toHaveBeenCalledWith('123', req.user);
       expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith({ mensagem: "Formulário cancelado com sucesso", form: { id: '123' } });
+      expect(res.json).toHaveBeenCalledWith({ mensagem: "Formulário cancelado com sucesso", form: expect.objectContaining({ id: '123' }) });
     });
   });
 });

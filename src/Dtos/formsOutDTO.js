@@ -1,12 +1,16 @@
 export class OutFormsDTO {
     constructor(form) {
-        this.id = form._id.toString();
+        this.id = form._id ? form._id.toString() : (form.id || null);
         this.departamento = form.departamento;
         this.operacao = form.operacao;
         
         if (form.data_operacao) {
-            const date = form.data_operacao;
-            this.data_operacao = `${String(date.getUTCDate()).padStart(2, '0')}-${String(date.getUTCMonth() + 1).padStart(2, '0')}-${date.getUTCFullYear()}`;
+            const date = form.data_operacao instanceof Date ? form.data_operacao : new Date(form.data_operacao);
+            if (!isNaN(date.getTime())) {
+                this.data_operacao = `${String(date.getUTCDate()).padStart(2, '0')}-${String(date.getUTCMonth() + 1).padStart(2, '0')}-${date.getUTCFullYear()}`;
+            } else {
+                this.data_operacao = form.data_operacao;
+            }
         } else {
             this.data_operacao = null;
         }

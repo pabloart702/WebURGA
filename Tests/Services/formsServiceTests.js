@@ -30,7 +30,7 @@ describe('FormsService tests', () => {
       await expect(FormsService.createForms(inputDto, reqUser)).rejects.toThrow('Não é possível registrar o apoio como realizado se a data da operação for no futuro.');
     });
 
-    it('deve criar o formulário e retornar o DTO correspondente', async () => {
+    it('deve criar o formulário e retornar o registro criado', async () => {
       const inputDto = { status: 'pendente' };
       const reqUser = { role: 'Administrador' };
       const createdRecord = { _id: '1', status: 'pendente' };
@@ -40,7 +40,7 @@ describe('FormsService tests', () => {
       const result = await FormsService.createForms(inputDto, reqUser);
       
       expect(formsRepository.create).toHaveBeenCalledWith(inputDto);
-      expect(result.id).toEqual('1'); // OutFormsDTO maps _id to id usually
+      expect(result._id).toEqual('1');
     });
   });
 

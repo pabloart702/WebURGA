@@ -1,10 +1,10 @@
-import documentService from '../Services/documentService.js';
+import DocumentService from '../Services/documentService.js';
 
 class DocumentController {
     // Retorna uma lista de todos os documentos disponíveis
-    async getAllDocuments(req, res, next) {
+    static async getAllDocuments(req, res, next) {
         try {
-            const result = await documentService.getAllDocuments();
+            const result = await DocumentService.getAllDocuments();
             res.status(200).json(result);
         } catch (error) {
             next(error);
@@ -12,11 +12,11 @@ class DocumentController {
     }
 
     // Transmite um documento específico de volta para o cliente
-    async downloadDocument(req, res, next) {
+    static async downloadDocument(req, res, next) {
         try {
             const { filename } = req.params;
 
-            const file = await documentService.getDocumentByFilename(filename);
+            const file = await DocumentService.getDocumentByFilename(filename);
 
             // Defina os cabeçalhos apropriados para o PDF.
             res.set({
@@ -26,7 +26,7 @@ class DocumentController {
             });
 
             // Abra o fluxo de download e direcione-o para a resposta.
-            const downloadStream = documentService.getDownloadStream(filename);
+            const downloadStream = DocumentService.getDownloadStream(filename);
 
             downloadStream.on('error', (err) => {
                 console.error("Erro ao transmitir o arquivo:", err);
@@ -40,4 +40,4 @@ class DocumentController {
     }
 }
 
-export default new DocumentController();
+export default DocumentController;

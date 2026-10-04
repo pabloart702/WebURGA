@@ -2,7 +2,7 @@ import User from '../Models/userModel.js';
 import { escapeRegex } from '../Utils/sanitizers.js';
 
 class UserRepository {
-    async findAll(page, searchTerm = '', departamento = '') {
+    static async findAll(page, searchTerm = '', departamento = '') {
         const limit = 50;
         const skip = (page - 1) * limit;
 
@@ -33,37 +33,37 @@ class UserRepository {
         };
     }
 
-    async findById(id) {
+    static async findById(id) {
         return await User.findById(id);
     }
 
-    async findByCpf(cpf) {
+    static async findByCpf(cpf) {
         return await User.findOne({ cpf });
     }
 
-    async findByNome(nome) {
+    static async findByNome(nome) {
         // Usa regex para ignorar case sensitivity e previne ReDoS/Injection
         const sanitizedNome = escapeRegex(nome);
         return await User.findOne({ nome: new RegExp(`^${sanitizedNome}$`, 'i') });
     }
 
-    async findByMatricula(matricula) {
+    static async findByMatricula(matricula) {
         return await User.findOne({ matricula: String(matricula) });
     }
 
-    async findByEmail(email) {
+    static async findByEmail(email) {
         return await User.findOne({ email });
     }
 
-    async create(userData) {
+    static async create(userData) {
         return await User.create(userData);
     }
 
-    async update(id, userData) {
+    static async update(id, userData) {
         return await User.findByIdAndUpdate(id, userData, { new: true });
     }
 
-    async delete(id) {
+    static async delete(id) {
         return await User.findByIdAndUpdate(
             id,
             { status: "Inativo" },
@@ -71,7 +71,7 @@ class UserRepository {
         );
     }
 
-    async activate(id) {
+    static async activate(id) {
         return await User.findByIdAndUpdate(
             id,
             { status: "Ativo" },
@@ -80,4 +80,4 @@ class UserRepository {
     }
 }
 
-export default new UserRepository();
+export default UserRepository;

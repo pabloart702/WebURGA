@@ -14,12 +14,24 @@ const swaggerOptions = {
                     type: 'http',
                     scheme: 'bearer',
                     bearerFormat: 'JWT',
-                }
-            }
+                    description: 'Token JWT enviado no header Authorization: Bearer <token>',
+                },
+                cookieAuth: {
+                    type: 'apiKey',
+                    in: 'cookie',
+                    name: 'token',
+                    description: 'Cookie HttpOnly JWT gerado automaticamente na rota /auth/login',
+                },
+            },
         },
-        security: [{
-            bearerAuth: []
-        }],
+        security: [
+            {
+                bearerAuth: [],
+            },
+            {
+                cookieAuth: [],
+            },
+        ],
         servers: [
             {
                 url: `http://localhost:${process.env.PORT_HOST || 3000}`,

@@ -3,8 +3,7 @@ import { validationResult } from 'express-validator';
 import { CreateFormsValidator, UpdateFormsValidator } from '../../src/Validators/formsValidator.js';
 
 async function runValidation(req, middlewares) {
-  const rules = middlewares.slice(0, -1);
-  for (const rule of rules) {
+  for (const rule of middlewares) {
     await rule(req, {}, () => { });
   }
   return validationResult(req);

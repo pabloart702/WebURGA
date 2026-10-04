@@ -2,11 +2,9 @@ import { jest } from '@jest/globals';
 import { validationResult } from 'express-validator';
 import { createUserValidator, updateUserValidator, updateProfileValidator } from '../../src/Validators/userValidator.js';
 
-// Função auxiliar para rodar a cadeia de middlewares, omitindo o validateRequest final
+// Função auxiliar para rodar a cadeia de middlewares de validação
 async function runValidation(req, middlewares) {
-  // Ignora o último middleware que é o validateRequest
-  const rules = middlewares.slice(0, -1);
-  for (const rule of rules) {
+  for (const rule of middlewares) {
     await rule(req, {}, () => {});
   }
   return validationResult(req);

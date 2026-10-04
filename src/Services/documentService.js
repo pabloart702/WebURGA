@@ -1,8 +1,8 @@
-import documentRepository from '../Repositories/documentRepository.js';
+import DocumentRepository from '../Repositories/documentRepository.js';
 
 class DocumentService {
-    async getAllDocuments() {
-        const files = await documentRepository.findAll();
+    static async getAllDocuments() {
+        const files = await DocumentRepository.findAll();
 
         // Mapear para um formato mais limpo para o frontend
         return files.map(file => ({
@@ -15,8 +15,8 @@ class DocumentService {
         }));
     }
 
-    async getDocumentByFilename(filename) {
-        const files = await documentRepository.findByFilename(filename);
+    static async getDocumentByFilename(filename) {
+        const files = await DocumentRepository.findByFilename(filename);
         if (files.length === 0) {
             const err = new Error("Documento não encontrado.");
             err.statusCode = 404;
@@ -25,9 +25,9 @@ class DocumentService {
         return files[0];
     }
 
-    getDownloadStream(filename) {
-        return documentRepository.getDownloadStream(filename);
+    static getDownloadStream(filename) {
+        return DocumentRepository.getDownloadStream(filename);
     }
 }
 
-export default new DocumentService();
+export default DocumentService;

@@ -1,6 +1,6 @@
 import UserService from '../Services/userService.js';
 import { InputUserDTO, AdminUpdateUserDTO, ProfileUpdateDTO } from '../Dtos/userInputDTO.js';
-import outUserDTO from '../Dtos/userOutDTO.js';
+import OutUserDTO from '../Dtos/userOutDTO.js';
 
 class UserController {
 
@@ -9,8 +9,8 @@ class UserController {
             const page = parseInt(req.query.page) || 1;
             const searchTerm = req.query.search || '';
             const departamento = req.query.departamento || '';
-            console.log("query:", req.query); const result = await UserService.findAll(page, searchTerm, departamento);
-            result.data = result.data.map(user => new outUserDTO(user));
+            const result = await UserService.findAll(page, searchTerm, departamento);
+            result.data = result.data.map(user => new OutUserDTO(user));
             res.status(200).json(result);
         } catch (error) {
             next(error);
@@ -21,7 +21,7 @@ class UserController {
         try {
             const { id } = req.params;
             const user = await UserService.findById(id);
-            res.status(200).json(new outUserDTO(user));
+            res.status(200).json(new OutUserDTO(user));
         } catch (error) {
             next(error);
         }
@@ -31,7 +31,7 @@ class UserController {
         try {
             const inputDTO = new InputUserDTO(req.body);
             const newUser = await UserService.create(inputDTO);
-            res.status(201).json(new outUserDTO(newUser));
+            res.status(201).json(new OutUserDTO(newUser));
         } catch (error) {
             next(error);
         }
@@ -42,7 +42,7 @@ class UserController {
             const { id } = req.params;
             const updateDTO = new AdminUpdateUserDTO(req.body);
             const updatedUser = await UserService.update(id, updateDTO);
-            res.status(200).json(new outUserDTO(updatedUser));
+            res.status(200).json(new OutUserDTO(updatedUser));
         } catch (error) {
             next(error);
         }
@@ -54,7 +54,7 @@ class UserController {
             const deletedUser = await UserService.delete(id);
             res.status(200).json({
                 mensagem: "Usuário desativado com sucesso",
-                user: new outUserDTO(deletedUser)
+                user: new OutUserDTO(deletedUser)
             });
         } catch (error) {
             next(error);
@@ -67,7 +67,7 @@ class UserController {
             const activatedUser = await UserService.activate(id);
             res.status(200).json({
                 mensagem: "Usuário ativado com sucesso",
-                user: new outUserDTO(activatedUser)
+                user: new OutUserDTO(activatedUser)
             });
         } catch (error) {
             next(error);
@@ -78,7 +78,7 @@ class UserController {
         try {
             const id = req.user.id;
             const user = await UserService.findById(id);
-            res.status(200).json(new outUserDTO(user));
+            res.status(200).json(new OutUserDTO(user));
         } catch (error) {
             next(error);
         }
@@ -89,7 +89,7 @@ class UserController {
             const id = req.user.id;
             const updateDTO = new ProfileUpdateDTO(req.body);
             const updatedUser = await UserService.update(id, updateDTO);
-            res.status(200).json(new outUserDTO(updatedUser));
+            res.status(200).json(new OutUserDTO(updatedUser));
         } catch (error) {
             next(error);
         }
@@ -102,7 +102,7 @@ class UserController {
             const updatedUser = await UserService.deleteProfilePicture(id);
             res.status(200).json({
                 mensagem: 'Foto de perfil removida com sucesso.',
-                user: new outUserDTO(updatedUser)
+                user: new OutUserDTO(updatedUser)
             });
         } catch (error) {
             next(error);
@@ -119,7 +119,7 @@ class UserController {
             const updatedUser = await UserService.updateProfilePicture(id, newFilename);
             res.status(200).json({
                 mensagem: "Foto de perfil atualizada com sucesso.",
-                user: new outUserDTO(updatedUser)
+                user: new OutUserDTO(updatedUser)
             });
         } catch (error) {
             next(error);

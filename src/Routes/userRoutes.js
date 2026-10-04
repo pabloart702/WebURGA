@@ -293,7 +293,7 @@ router.patch("/id/:id/ativar", authorize('Administrador'), UserController.activa
  *       404:
  *         description: Usuário não encontrado
  */
-router.patch("/perfil", authorize('Usuário', 'Administrador'), updateProfileValidator, UserController.updateProfile);
+router.patch("/perfil", authorize('Usuário', 'Administrador'), updateProfileValidator, validateRequest, UserController.updateProfile);
 
 /**
  * @swagger
@@ -353,4 +353,39 @@ router.patch("/profile-picture", authorize('Usuário', 'Administrador'), uploadL
  */
 router.delete("/profile-picture", authorize('Usuário', 'Administrador'), UserController.deleteProfilePicture);
 
-export default router;
+export default router;/**
+ * @swagger
+ * /uploads/profiles/{filename}:
+ *   get:
+ *     summary: Retorna a imagem de perfil protegida
+ *     description: Rota estática e autenticada para servir fotos de perfil salvas no servidor. Requer cookie HttpOnly ou cabeçalho Authorization Bearer. A tag img no frontend deve conter crossorigin="use-credentials".
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: filename
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Nome do arquivo de imagem (ex. 6a8f52-1728000000000.webp)
+ *     responses:
+ *       200:
+ *         description: Imagem transmitida com sucesso
+ *         content:
+ *           image/webp:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *           image/jpeg:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *           image/png:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       401:
+ *         description: Não autorizado (token ausente ou inválido)
+ *       404:
+ *         description: Imagem não encontrada
+ */
+
