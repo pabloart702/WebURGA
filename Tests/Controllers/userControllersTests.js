@@ -46,7 +46,7 @@ describe('UserController tests', () => {
   describe('deleteUser', () => {
     it('deve deletar um usuário e retornar mensagem de sucesso', async () => {
       req.params.id = '123';
-      jest.spyOn(UserService, 'delete').mockResolvedValue({ _id: '123', status: 'INATIVO' });
+      jest.spyOn(UserService, 'delete').mockResolvedValue({ _id: '123', status: 'Inativo' });
 
       await UserController.deleteUser(req, res, next);
 

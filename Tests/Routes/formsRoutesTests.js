@@ -4,6 +4,7 @@ import { jest } from '@jest/globals';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 import formsRoutes from '../../src/Routes/formsRoutes.js';
+import { authMiddleware } from '../../src/Middlewares/authMiddleware.js';
 import formsService from '../../src/Services/formsService.js';
 
 describe('Forms Routes Tests', () => {
@@ -13,7 +14,7 @@ describe('Forms Routes Tests', () => {
     app = express();
     app.use(express.json());
     app.use(cookieParser());
-    app.use('/forms', formsRoutes);
+    app.use('/forms', authMiddleware, formsRoutes);
     app.use((err, req, res, next) => {
       console.error('ERRO FORMS ROUTES:', err.message, err.stack);
       const status = err.statusCode || 500;
@@ -79,10 +80,10 @@ describe('Forms Routes Tests', () => {
         });
 
       if (response.status === 400) {
-          expect(response.body.errors).toBeDefined();
+        expect(response.body.errors).toBeDefined();
       } else {
-          expect(response.status).toBe(201);
-          expect(response.body.operacao).toBe('Op Teste Validada');
+        expect(response.status).toBe(201);
+        expect(response.body.operacao).toBe('Op Teste Validada');
       }
     });
   });

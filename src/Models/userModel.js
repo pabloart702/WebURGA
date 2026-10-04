@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        default: "USUÁRIO"
+        default: "Usuário"
     },
     departamento: {
         type: String,
@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        default: "ATIVO"
+        default: "Ativo"
     },
     profilePicture: {
         type: String,

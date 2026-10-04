@@ -18,18 +18,19 @@ export const CreateFormsValidator = [
         .trim()
         .isLength({ min: 3, max: 50 }).withMessage('A operação deve ter entre 3 e 50 carateres'),
     body('data_operacao')
-        .notEmpty().withMessage('Data da operação é obrigatória')
+        .optional({ values: 'falsy' })
         .matches(/^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/]\d{4}$/).withMessage('Data da operação deve estar no formato DD/MM/YYYY ou DD-MM-YYYY')
         .customSanitizer(val => {
-            if (!val) return val;
+            if (!val) return null;
             const parts = val.split(/[-/]/);
-            return `${parts[2]}-${parts[1]}-${parts[0]}`; // Converter para YYYY-MM-DD para compatibilidade com Node e MongoDB
+            return `${parts[2]}-${parts[1]}-${parts[0]}`; // Normaliza para YYYY-MM-DD
         }),
     body('numero_processo')
-        .notEmpty().withMessage('Número do processo é obrigatório')
+        .optional({ values: 'falsy' })
         .isString().withMessage('Número do processo deve ser um texto')
         .bail()
         .trim()
+        .customSanitizer(val => typeof val === 'string' ? val.replace(/[-.]/g, '') : val)
         .isLength({ min: 15, max: 30 }).withMessage('O número do processo deve ter entre 15 e 30 carateres')
         .matches(/^\d+$/).withMessage('O número do processo deve conter apenas números'),
     body('medida_cautelar')
@@ -40,10 +41,11 @@ export const CreateFormsValidator = [
         .trim()
         .isIn(["Busca e apreensão", "Auto de prisão em flagrante", "Sequestro", "Bloqueio"]).withMessage('Medida cautelar inválida. Valores aceitos: Busca e Apreensão, Auto de Prisão em Flagrante, Sequestro, Bloqueio.'),
     body('numero_cautelar')
-        .notEmpty().withMessage('Número da medida cautelar é obrigatório')
+        .optional({ values: 'falsy' })
         .isString().withMessage('Número da medida cautelar deve ser um texto')
         .bail()
         .trim()
+        .customSanitizer(val => typeof val === 'string' ? val.replace(/[-.]/g, '') : val)
         .isLength({ max: 30 }).withMessage('O número da medida cautelar deve ter no máximo 30 carateres')
         .matches(/^\d+$/).withMessage('O número da medida cautelar deve conter apenas números'),
     body('resultados')
@@ -101,18 +103,19 @@ export const UpdateFormsValidator = [
         .trim()
         .isLength({ min: 3, max: 50 }).withMessage('A operação deve ter entre 3 e 50 carateres'),
     body('data_operacao')
-        .optional()
+        .optional({ values: 'falsy' })
         .matches(/^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/]\d{4}$/).withMessage('Data da operação deve estar no formato DD/MM/YYYY ou DD-MM-YYYY')
         .customSanitizer(val => {
-            if (!val) return val;
+            if (!val) return null;
             const parts = val.split(/[-/]/);
-            return `${parts[2]}-${parts[1]}-${parts[0]}`;
+            return `${parts[2]}-${parts[1]}-${parts[0]}`; // Normaliza para YYYY-MM-DD
         }),
     body('numero_processo')
-        .optional()
+        .optional({ values: 'falsy' })
         .isString().withMessage('Número do processo deve ser um texto')
         .bail()
         .trim()
+        .customSanitizer(val => typeof val === 'string' ? val.replace(/[-.]/g, '') : val)
         .isLength({ min: 15, max: 30 }).withMessage('O número do processo deve ter entre 15 e 30 carateres')
         .matches(/^\d+$/).withMessage('O número do processo deve conter apenas números'),
     body('medida_cautelar')
@@ -123,10 +126,11 @@ export const UpdateFormsValidator = [
         .trim()
         .isIn(["Busca e apreensão", "Auto de prisão em flagrante", "Sequestro", "Bloqueio"]).withMessage('Medida cautelar inválida. Valores aceitos: Busca e Apreensão, Auto de Prisão em Flagrante, Sequestro, Bloqueio.'),
     body('numero_cautelar')
-        .optional()
+        .optional({ values: 'falsy' })
         .isString().withMessage('Número da medida cautelar deve ser um texto')
         .bail()
         .trim()
+        .customSanitizer(val => typeof val === 'string' ? val.replace(/[-.]/g, '') : val)
         .isLength({ max: 30 }).withMessage('O número da medida cautelar deve ter no máximo 30 carateres')
         .matches(/^\d+$/).withMessage('O número da medida cautelar deve conter apenas números'),
     body('resultados')

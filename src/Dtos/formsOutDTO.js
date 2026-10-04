@@ -7,11 +7,13 @@ export class OutFormsDTO {
         if (form.data_operacao) {
             const date = form.data_operacao;
             this.data_operacao = `${String(date.getUTCDate()).padStart(2, '0')}-${String(date.getUTCMonth() + 1).padStart(2, '0')}-${date.getUTCFullYear()}`;
+        } else {
+            this.data_operacao = null;
         }
 
-        this.numero_processo = form.numero_processo;
+        this.numero_processo = form.numero_processo || null;
         this.medida_cautelar = form.medida_cautelar;
-        this.numero_cautelar = form.numero_cautelar;
+        this.numero_cautelar = form.numero_cautelar || null;
         this.resultados = form.resultados;
         this.tipos_apreendidos = form.tipos_apreendidos;
         this.descricao_operacao = form.descricao_operacao;

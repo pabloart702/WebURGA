@@ -76,16 +76,16 @@ describe('User Repository Tests', () => {
   });
 
   it('deve desativar um usuário (delete)', async () => {
-    jest.spyOn(User, 'findByIdAndUpdate').mockResolvedValue({ status: 'INATIVO' });
+    jest.spyOn(User, 'findByIdAndUpdate').mockResolvedValue({ status: 'Inativo' });
     const result = await userRepository.delete('123');
-    expect(User.findByIdAndUpdate).toHaveBeenCalledWith('123', { status: 'INATIVO' }, { new: true });
-    expect(result.status).toBe('INATIVO');
+    expect(User.findByIdAndUpdate).toHaveBeenCalledWith('123', { status: 'Inativo' }, { new: true });
+    expect(result.status).toBe('Inativo');
   });
 
   it('deve ativar um usuário (activate)', async () => {
-    jest.spyOn(User, 'findByIdAndUpdate').mockResolvedValue({ status: 'ATIVO' });
+    jest.spyOn(User, 'findByIdAndUpdate').mockResolvedValue({ status: 'Ativo' });
     const result = await userRepository.activate('123');
-    expect(User.findByIdAndUpdate).toHaveBeenCalledWith('123', { status: 'ATIVO' }, { new: true });
-    expect(result.status).toBe('ATIVO');
+    expect(User.findByIdAndUpdate).toHaveBeenCalledWith('123', { status: 'Ativo' }, { new: true });
+    expect(result.status).toBe('Ativo');
   });
 });

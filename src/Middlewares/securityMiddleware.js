@@ -22,13 +22,13 @@ export const loginLimiter = rateLimit({
 
 export const downloadLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutos
-    max: 10, // Limita cada IP a 10 downloads por `window` (por 15 minutos)
+    max: 30, // Limita cada IP a 30 downloads por window (por 15 minutos)
     message: {
         mensagem: "Muitos downloads recentes a partir deste IP, por favor tente novamente após 15 minutos."
     },
     statusCode: 429,
-    standardHeaders: true, 
-    legacyHeaders: false, 
+    standardHeaders: true,
+    legacyHeaders: false,
 });
 
 export const uploadLimiter = rateLimit({

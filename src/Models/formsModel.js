@@ -10,20 +10,17 @@ const formsSchema = new mongoose.Schema({
         required: [true, 'O campo operacao é obrigatório.']
     },
     data_operacao: {
-        type: Date,
-        required: [true, 'O campo data_operacao é obrigatório.']
+        type: Date
     },
     numero_processo: {
-        type: String,
-        required: [true, 'O campo numero_processo é obrigatório.']
+        type: String
     },
     medida_cautelar: {
         type: String,
         required: [true, 'O campo medida_cautelar é obrigatório.']
     },
     numero_cautelar: {
-        type: String,
-        required: [true, 'O campo numero_cautelar é obrigatório.']
+        type: String
     },
     resultados: {
         type: [String],

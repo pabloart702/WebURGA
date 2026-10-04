@@ -1,7 +1,7 @@
 import { Router } from "express";
 import formsController from "../Controllers/formsControllers.js";
 import { CreateFormsValidator, UpdateFormsValidator } from "../Validators/formsValidator.js";
-import { authMiddleware, authorize } from "../Middlewares/authMiddleware.js";
+import { authorize } from "../Middlewares/authMiddleware.js";
 import { validateRequest } from "../Middlewares/errorMiddleware.js";
 import { createLimiter } from "../Middlewares/securityMiddleware.js";
 
@@ -87,7 +87,7 @@ const router = Router();
  *               items:
  *                 $ref: '#/components/schemas/Forms'
  */
-router.get("/", authMiddleware, authorize('Usuário', 'Administrador'), formsController.listForms);
+router.get("/", authorize('Usuário', 'Administrador'), formsController.listForms);
 
 /**
  * @swagger
@@ -99,7 +99,7 @@ router.get("/", authMiddleware, authorize('Usuário', 'Administrador'), formsCon
  *       200:
  *         description: Dados do dashboard
  */
-router.get("/dashboard", authMiddleware, authorize('Usuário', 'Administrador'), formsController.getDashboardData);
+router.get("/dashboard", authorize('Usuário', 'Administrador'), formsController.getDashboardData);
 
 /**
  * @swagger
@@ -124,7 +124,7 @@ router.get("/dashboard", authMiddleware, authorize('Usuário', 'Administrador'),
  *       404:
  *         description: Formulário não encontrado
  */
-router.get("/:id", authMiddleware, authorize('Usuário', 'Administrador'), formsController.searchFormsById);
+router.get("/:id", authorize('Usuário', 'Administrador'), formsController.searchFormsById);
 
 /**
  * @swagger
@@ -182,7 +182,7 @@ router.get("/:id", authMiddleware, authorize('Usuário', 'Administrador'), forms
  *             schema:
  *               $ref: '#/components/schemas/Forms'
  */
-router.post("/", authMiddleware, authorize('Usuário', 'Administrador'), createLimiter, CreateFormsValidator, validateRequest, formsController.createForms);
+router.post("/", authorize('Usuário', 'Administrador'), createLimiter, CreateFormsValidator, validateRequest, formsController.createForms);
 
 /**
  * @swagger
@@ -241,7 +241,7 @@ router.post("/", authMiddleware, authorize('Usuário', 'Administrador'), createL
  *       404:
  *         description: Formulário não encontrado
  */
-router.patch("/:id", authMiddleware, authorize('Usuário', 'Administrador'), UpdateFormsValidator, validateRequest, formsController.updateForms);
+router.patch("/:id", authorize('Usuário', 'Administrador'), UpdateFormsValidator, validateRequest, formsController.updateForms);
 
 /**
  * @swagger
@@ -271,6 +271,6 @@ router.patch("/:id", authMiddleware, authorize('Usuário', 'Administrador'), Upd
  *       404:
  *         description: Formulário não encontrado
  */
-router.delete("/:id", authMiddleware, authorize('Usuário', 'Administrador'), formsController.deleteForms);
+router.delete("/:id", authorize('Usuário', 'Administrador'), formsController.deleteForms);
 
 export default router;

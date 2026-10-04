@@ -4,6 +4,7 @@ import { jest } from '@jest/globals';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 import userRoutes from '../../src/Routes/userRoutes.js';
+import { authMiddleware } from '../../src/Middlewares/authMiddleware.js';
 import userService from '../../src/Services/userService.js';
 
 describe('User Routes Tests', () => {
@@ -13,7 +14,7 @@ describe('User Routes Tests', () => {
     app = express();
     app.use(express.json());
     app.use(cookieParser());
-    app.use('/users', userRoutes);
+    app.use('/users', authMiddleware, userRoutes);
     app.use((err, req, res, next) => {
       const status = err.statusCode || 500;
       res.status(status).json({ error: err.message });

@@ -14,7 +14,7 @@ class AuthService {
             throw err;
         }
 
-        if (user.status === 'INATIVO') {
+        if (user.status === 'Inativo') {
             const err = new Error("Credenciais inválidas");
             err.statusCode = 401;
             throw err;

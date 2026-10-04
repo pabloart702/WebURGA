@@ -29,8 +29,8 @@ describe('AuthService tests', () => {
       await expect(AuthService.login('test@test.com', 'wrongpassword')).rejects.toThrow('Credenciais inválidas');
     });
 
-    it('deve lançar um erro se o status do usuário for INATIVO', async () => {
-      jest.spyOn(UserService, 'findByEmail').mockResolvedValue({ password: 'hashedPassword', status: 'INATIVO' });
+    it('deve lançar um erro se o status do usuário for Inativo', async () => {
+      jest.spyOn(UserService, 'findByEmail').mockResolvedValue({ password: 'hashedPassword', status: 'Inativo' });
       jest.spyOn(bcrypt, 'compare').mockImplementation(() => Promise.resolve(true));
 
       await expect(AuthService.login('test@test.com', 'password123')).rejects.toThrow('Credenciais inválidas');
@@ -42,7 +42,7 @@ describe('AuthService tests', () => {
         email: 'test@test.com',
         role: 'Admin',
         departamento: 'TI',
-        status: 'ATIVO',
+        status: 'Ativo',
         password: 'hashedPassword'
       };
       jest.spyOn(UserService, 'findByEmail').mockResolvedValue(mockUser);

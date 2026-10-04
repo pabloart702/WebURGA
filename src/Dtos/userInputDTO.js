@@ -9,8 +9,8 @@ class InputUserDTO {
         this.cargo = payload.cargo;
         this.departamento = payload.departamento;
 
-        this.role = payload.role || 'USUÁRIO';
-        this.status = payload.status || 'ATIVO';
+        this.role = payload.role || 'Usuário';
+        this.status = payload.status || 'Ativo';
     }
 }
 

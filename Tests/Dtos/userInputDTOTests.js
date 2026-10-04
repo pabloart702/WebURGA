@@ -17,26 +17,26 @@ describe('userInputDTO tests', () => {
 
       expect(dto.nome).toBe('João');
       expect(dto.email).toBe('joao@teste.com');
-      expect(dto.role).toBe('USUÁRIO');
-      expect(dto.status).toBe('ATIVO');
+      expect(dto.role).toBe('Usuário');
+      expect(dto.status).toBe('Ativo');
     });
 
     it('deve aceitar role e status customizados caso sejam passados', () => {
-      const payload = { role: 'Administrador', status: 'INATIVO' };
+      const payload = { role: 'Administrador', status: 'Inativo' };
       const dto = new InputUserDTO(payload);
 
       expect(dto.role).toBe('Administrador');
-      expect(dto.status).toBe('INATIVO');
+      expect(dto.status).toBe('Inativo');
     });
   });
 
   describe('AdminUpdateUserDTO', () => {
     it('deve mapear apenas os campos que forem passados', () => {
-      const payload = { nome: 'Maria', status: 'INATIVO' };
+      const payload = { nome: 'Maria', status: 'Inativo' };
       const dto = new AdminUpdateUserDTO(payload);
 
       expect(dto.nome).toBe('Maria');
-      expect(dto.status).toBe('INATIVO');
+      expect(dto.status).toBe('Inativo');
       expect(dto.email).toBeUndefined(); // Não deve existir se não foi passado
       expect(dto.role).toBeUndefined();
     });

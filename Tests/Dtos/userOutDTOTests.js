@@ -7,11 +7,11 @@ describe('userOutDTO tests', () => {
       nome: 'Carlos',
       email: 'carlos@teste.com',
       cpf: '00000000000',
-      role: 'USUÁRIO',
+      role: 'Usuário',
       matricula: '5555',
       cargo: 'Agente',
       departamento: 'Operações',
-      status: 'ATIVO',
+      status: 'Ativo',
       profilePicture: 'foto.jpg'
     };
 

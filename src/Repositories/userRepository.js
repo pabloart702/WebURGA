@@ -66,7 +66,7 @@ class UserRepository {
     async delete(id) {
         return await User.findByIdAndUpdate(
             id,
-            { status: "INATIVO" },
+            { status: "Inativo" },
             { new: true }
         );
     }
@@ -74,7 +74,7 @@ class UserRepository {
     async activate(id) {
         return await User.findByIdAndUpdate(
             id,
-            { status: "ATIVO" },
+            { status: "Ativo" },
             { new: true }
         );
     }

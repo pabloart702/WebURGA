@@ -1,7 +1,7 @@
 import { Router } from "express";
 import UserController from "../Controllers/userControllers.js";
 import { createUserValidator, updateUserValidator, updateProfileValidator } from "../Validators/userValidator.js";
-import { authMiddleware, authorize } from "../Middlewares/authMiddleware.js";
+import { authorize } from "../Middlewares/authMiddleware.js";
 import { validateRequest } from "../Middlewares/errorMiddleware.js";
 import { createLimiter, uploadLimiter } from "../Middlewares/securityMiddleware.js";
 import { uploadMiddleware, imageProcessMiddleware } from "../Middlewares/uploadMiddleware.js";
@@ -45,9 +45,9 @@ const router = Router();
  *         cpf: 51256825120
  *         matricula: 111.222-3
  *         cargo: Delegado
- *         role: ADMINISTRADOR
+ *         role: Administrador
  *         departamento: Homicídios
- *         status: ATIVO
+ *         status: Ativo
  */
 
 /**
@@ -73,7 +73,7 @@ const router = Router();
  *               items:
  *                 $ref: '#/components/schemas/User'
  */
-router.get("/", authMiddleware, authorize('Administrador'), UserController.listUsers);
+router.get("/", authorize('Administrador'), UserController.listUsers);
 
 /**
  * @swagger
@@ -98,7 +98,7 @@ router.get("/", authMiddleware, authorize('Administrador'), UserController.listU
  *       404:
  *         description: Usuário não encontrado
  */
-router.get("/id/:id", authMiddleware, authorize('Administrador'), UserController.searchUserForId);
+router.get("/id/:id", authorize('Administrador'), UserController.searchUserForId);
 
 /**
  * @swagger
@@ -146,7 +146,7 @@ router.get("/id/:id", authMiddleware, authorize('Administrador'), UserController
  *             schema:
  *               $ref: '#/components/schemas/User'
  */
-router.post("/", authMiddleware, authorize('Administrador'), createLimiter, createUserValidator, validateRequest, UserController.createUser);
+router.post("/", authorize('Administrador'), createLimiter, createUserValidator, validateRequest, UserController.createUser);
 
 /**
  * @swagger
@@ -195,7 +195,7 @@ router.post("/", authMiddleware, authorize('Administrador'), createLimiter, crea
  *       404:
  *         description: Usuário não encontrado
  */
-router.patch("/id/:id", authMiddleware, authorize('Administrador'), updateUserValidator, validateRequest, UserController.updateUser);
+router.patch("/id/:id", authorize('Administrador'), updateUserValidator, validateRequest, UserController.updateUser);
 
 /**
  * @swagger
@@ -225,7 +225,7 @@ router.patch("/id/:id", authMiddleware, authorize('Administrador'), updateUserVa
  *       404:
  *         description: Usuário não encontrado
  */
-router.delete("/id/:id", authMiddleware, authorize('Administrador'), UserController.deleteUser);
+router.delete("/id/:id", authorize('Administrador'), UserController.deleteUser);
 
 /**
  * @swagger
@@ -255,7 +255,7 @@ router.delete("/id/:id", authMiddleware, authorize('Administrador'), UserControl
  *       404:
  *         description: Usuário não encontrado
  */
-router.patch("/id/:id/ativar", authMiddleware, authorize('Administrador'), UserController.activateUser);
+router.patch("/id/:id/ativar", authorize('Administrador'), UserController.activateUser);
 
 /**
  * @swagger
@@ -293,7 +293,7 @@ router.patch("/id/:id/ativar", authMiddleware, authorize('Administrador'), UserC
  *       404:
  *         description: Usuário não encontrado
  */
-router.patch("/perfil", authMiddleware, authorize('Usuário', 'Administrador'), updateProfileValidator, UserController.updateProfile);
+router.patch("/perfil", authorize('Usuário', 'Administrador'), updateProfileValidator, UserController.updateProfile);
 
 /**
  * @swagger
@@ -309,7 +309,7 @@ router.patch("/perfil", authMiddleware, authorize('Usuário', 'Administrador'), 
  *             schema:
  *               $ref: '#/components/schemas/User'
  */
-router.get("/perfil", authMiddleware, authorize('Usuário', 'Administrador'), UserController.getProfile);
+router.get("/perfil", authorize('Usuário', 'Administrador'), UserController.getProfile);
 
 /**
  * @swagger
@@ -335,7 +335,7 @@ router.get("/perfil", authMiddleware, authorize('Usuário', 'Administrador'), Us
  *       401:
  *         description: Não autorizado
  */
-router.patch("/profile-picture", authMiddleware, authorize('Usuário', 'Administrador'), uploadLimiter, uploadMiddleware.single('profilePicture'), imageProcessMiddleware, UserController.uploadProfilePicture);
+router.patch("/profile-picture", authorize('Usuário', 'Administrador'), uploadLimiter, uploadMiddleware.single('profilePicture'), imageProcessMiddleware, UserController.uploadProfilePicture);
 
 /**
  * @swagger
@@ -351,6 +351,6 @@ router.patch("/profile-picture", authMiddleware, authorize('Usuário', 'Administ
  *       401:
  *         description: Não autorizado
  */
-router.delete("/profile-picture", authMiddleware, authorize('Usuário', 'Administrador'), UserController.deleteProfilePicture);
+router.delete("/profile-picture", authorize('Usuário', 'Administrador'), UserController.deleteProfilePicture);
 
 export default router;

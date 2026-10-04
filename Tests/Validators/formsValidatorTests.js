@@ -5,7 +5,7 @@ import { CreateFormsValidator, UpdateFormsValidator } from '../../src/Validators
 async function runValidation(req, middlewares) {
   const rules = middlewares.slice(0, -1);
   for (const rule of rules) {
-    await rule(req, {}, () => {});
+    await rule(req, {}, () => { });
   }
   return validationResult(req);
 }
@@ -30,10 +30,30 @@ describe('Forms Validator Tests', () => {
 
       const result = await runValidation(req, CreateFormsValidator);
       const errors = result.array().map(e => e.msg);
-      
+
       expect(errors.length).toBe(0);
       // Verifica se a data foi sanitizada corretamente para YYYY-MM-DD
       expect(req.body.data_operacao).toBe('2026-08-25');
+    });
+
+    it('deve aprovar criação sem data_operacao, numero_processo e numero_cautelar (campos opcionais)', async () => {
+      const req = {
+        body: {
+          departamento: 'URGA',
+          operacao: 'Operação Sem Data',
+          medida_cautelar: 'Busca e apreensão',
+          resultados: ['Apreensão'],
+          tipos_apreendidos: ['CARRO'],
+          descricao_operacao: 'Sem data e processos informados.',
+          valor_estimado: 50000.00
+        }
+      };
+
+      const result = await runValidation(req, CreateFormsValidator);
+      const errors = result.array().map(e => e.msg);
+
+      expect(errors.length).toBe(0);
+      expect(req.body.data_operacao).toBeFalsy();
     });
 
     it('deve rejeitar campos obrigatórios ausentes', async () => {
@@ -43,10 +63,10 @@ describe('Forms Validator Tests', () => {
 
       expect(errors).toContain('Departamento é obrigatório');
       expect(errors).toContain('Operação é obrigatória');
-      expect(errors).toContain('Data da operação é obrigatória');
-      expect(errors).toContain('Número do processo é obrigatório');
+      expect(errors).not.toContain('Data da operação é obrigatória');
+      expect(errors).not.toContain('Número do processo é obrigatório');
+      expect(errors).not.toContain('Número da medida cautelar é obrigatório');
       expect(errors).toContain('Medida cautelar é obrigatória');
-      expect(errors).toContain('Número da medida cautelar é obrigatório');
       expect(errors).toContain('Resultados é obrigatório');
       expect(errors).toContain('Tipos apreendidos é obrigatório');
       expect(errors).toContain('O valor estimado total da operação é obrigatório');
@@ -87,7 +107,7 @@ describe('Forms Validator Tests', () => {
 
       const result = await runValidation(req, UpdateFormsValidator);
       const errors = result.array().map(e => e.msg);
-      
+
       expect(errors.length).toBe(0);
     });
   });

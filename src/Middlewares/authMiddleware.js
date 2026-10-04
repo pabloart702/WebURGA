@@ -67,6 +67,12 @@ export const authMiddleware = (req, res, next) => {
 export function authorize(...allowedRoles) {
     return (req, res, next) => {
         try {
+            if (!req.user || !req.user.role) {
+                const err = new Error("Não autenticado. Faça login para continuar.");
+                err.statusCode = 401;
+                throw err;
+            }
+
             const userRole = req.user.role;
 
             const hasPermission = allowedRoles.includes(userRole);
