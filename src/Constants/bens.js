@@ -8,8 +8,6 @@ export const BENS = [
     "Aeronave",
     "Bicicleta",
     "Dinheiro",
-    "Dolar",
-    "Euro",
     "Computador",
     "Celular",
     "Imóvel Rural",
@@ -17,7 +15,8 @@ export const BENS = [
     "Móveis",
     "Arte",
     "Criptoativos",
-    "Semoventes"
+    "Semoventes",
+    "Arma"
 ]
 
 export const BENS_VALIDOS = BENS;

@@ -10,7 +10,7 @@ export const globalLimiter = rateLimit({
 
 export const loginLimiter = rateLimit({
     windowMs: 5 * 60 * 1000, // 5 minutos
-    max: 5, // Limita cada IP a 5 requisições por `window` (por 5 minutos)
+    max: 50, // Limita cada IP a 5 requisições por `window`
     message: {
         mensagem: "Muitas tentativas de login a partir deste IP, por favor tente novamente após 5 minutos."
     },
@@ -22,7 +22,7 @@ export const loginLimiter = rateLimit({
 
 export const downloadLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutos
-    max: 30, // Limita cada IP a 30 downloads por window (por 15 minutos)
+    max: 50, // Limita cada IP a 30 downloads por window (por 15 minutos)
     message: {
         mensagem: "Muitos downloads recentes a partir deste IP, por favor tente novamente após 15 minutos."
     },
@@ -33,7 +33,7 @@ export const downloadLimiter = rateLimit({
 
 export const uploadLimiter = rateLimit({
     windowMs: 60 * 60 * 1000, // 1 hora
-    max: 10, // 10 uploads por hora
+    max: 50, // 10 uploads por hora
     message: {
         mensagem: "Muitas tentativas de upload a partir deste IP, por favor tente novamente após 1 hora."
     },
