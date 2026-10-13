@@ -23,10 +23,25 @@ app.use(helmet({
 app.set('trust proxy', 1);
 app.use(globalLimiter);
 
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'http://127.0.0.1:5173',
+    process.env.FRONTEND_URL,
+].filter(Boolean);
+
 const corsOptions = {
-    origin: [
-        'http://localhost:5173',        // Frontend (Vite)
-    ],
+    origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        if (
+            allowedOrigins.includes(origin) ||
+            origin.endsWith('.onrender.com') ||
+            (process.env.FRONTEND_URL && origin === process.env.FRONTEND_URL)
+        ) {
+            return callback(null, true);
+        }
+        return callback(new Error(`Bloqueado por CORS: ${origin}`));
+    },
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,  // Obrigatório para cookies cross-origin (HttpOnly JWT)

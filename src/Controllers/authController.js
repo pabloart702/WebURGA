@@ -4,7 +4,7 @@ import AuthService from '../Services/authService.js';
 const cookieOptions = {
     httpOnly: true,                                          // Inacessível ao JavaScript do browser
     secure: process.env.NODE_ENV === 'production',           // HTTPS obrigatório apenas em prod
-    sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax', // 'lax' permite dev cross-origin
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // 'none' permite cookies cross-origin em prod (HTTPS)
     path: '/',
     maxAge: 20 * 60 * 1000,                                 // 20 minutos (em ms)
 };

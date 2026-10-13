@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 const cookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // 'none' permite cookies cross-origin em prod (HTTPS)
     path: '/',
     maxAge: 20 * 60 * 1000, // 20 minutos
 };
