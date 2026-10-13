@@ -37,14 +37,14 @@ export const authMiddleware = (req, res, next) => {
         if (decoded.exp) {
             const nowUnix = Math.floor(Date.now() / 1000);
             const timeToExpire = decoded.exp - nowUnix;
-            
+
             if (timeToExpire > 0 && timeToExpire < 10 * 60) {
                 const newToken = jwt.sign(
                     { id: decoded.id, email: decoded.email, role: decoded.role, departamento: decoded.departamento },
                     process.env.JWT_SECRET,
                     { expiresIn: '20m' }
                 );
-                
+
                 // Se estamos usando cookies, atualiza o cookie com o novo token
                 if (req.cookies?.token && typeof res.cookie === 'function') {
                     res.cookie('token', newToken, cookieOptions);
