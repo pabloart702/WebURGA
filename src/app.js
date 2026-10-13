@@ -46,6 +46,10 @@ const uploadsPath = path.join(__dirname, '../uploads/profiles');
 if (process.env.NODE_ENV !== 'production') {
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 }
+app.get('/', (req, res) => {
+    res.json({ message: "API da URGA online e rodando no Render!", status: "online" });
+});
+
 app.use('/auth', authRoutes);
 app.use('/users', authMiddleware, userRoutes);
 app.use('/forms', authMiddleware, formsRoutes);
