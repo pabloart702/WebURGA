@@ -1,6 +1,7 @@
 import app from './app.js'
 import 'dotenv/config';
 import { connectDB } from './Config/database.js';
+import ProfileImageService from './Services/profileImageService.js';
 
 const PORT = process.env.PORT || process.env.PORT_HOST || 3000;
 
@@ -9,7 +10,9 @@ if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 64) {
     process.exit(1);
 }
 
-connectDB().then(() => {
+connectDB().then(async () => {
+    await ProfileImageService.seedDefaultProfiles();
+
     app.listen(PORT, () => {
         console.log(`API online na porta ${PORT}`);
     });

@@ -1,9 +1,16 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import ProfileImageService from '../Services/profileImageService.js';
 
 export const deleteProfileImage = (filename) => {
     if (!filename) return;
+
+    // Se o banco estiver conectado, remove também do GridFS em segundo plano
+    if (ProfileImageService && typeof ProfileImageService.deleteProfileImage === 'function') {
+        ProfileImageService.deleteProfileImage(filename).catch(() => {});
+    }
+
     try {
         const __filename = fileURLToPath(import.meta.url);
         const __dirname = path.dirname(__filename);

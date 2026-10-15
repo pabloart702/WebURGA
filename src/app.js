@@ -10,6 +10,7 @@ import userRoutes from './Routes/userRoutes.js';
 import formsRoutes from './Routes/formsRoutes.js';
 import authRoutes from './Routes/authRoutes.js';
 import documentRoutes from './Routes/documentRoutes.js';
+import profileImageRoutes from './Routes/profileImageRoutes.js';
 import { globalErrorHandler } from './Middlewares/errorMiddleware.js';
 import { authMiddleware } from './Middlewares/authMiddleware.js';
 import { webLog } from './Middlewares/logMiddleware.js';
@@ -69,7 +70,7 @@ app.use('/auth', authRoutes);
 app.use('/users', authMiddleware, userRoutes);
 app.use('/forms', authMiddleware, formsRoutes);
 app.use('/documentos', authMiddleware, documentRoutes);
-app.use('/uploads/profiles', authMiddleware, securityHeadersMiddleware, express.static(uploadsPath, { dotfiles: 'deny', index: false }));
+app.use('/uploads/profiles', authMiddleware, securityHeadersMiddleware, profileImageRoutes);
 
 app.use((req, res, next) => {
     const error = new Error(`Rota não encontrada`);

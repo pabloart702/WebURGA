@@ -5,6 +5,7 @@ import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import ProfileImageService from '../Services/profileImageService.js';
 
 // Configuração do Multer usando MemoryStorage para não salvar em disco antes da validação
 const storage = multer.memoryStorage();
@@ -58,12 +59,10 @@ export const imageProcessMiddleware = async (req, res, next) => {
         }
 
         // 2. Geração de nome seguro (UUID aleatório em vez do nome original ou bcrypt)
-        // Usamos crypto.randomUUID() que é nativo e não tem caracteres especiais perigosos (como /)
         const safeFilename = `${crypto.randomUUID()}.webp`;
-        const outputPath = path.join(uploadDir, safeFilename);
 
-        // 3. Processamento com Sharp
-        await sharp(buffer)
+        // 3. Processamento com Sharp para buffer WebP otimizado
+        const webpBuffer = await sharp(buffer)
             .resize({
                 width: 1500, // Limita largura máxima (para economizar espaço)
                 height: 1500, // Limita altura máxima
@@ -71,9 +70,20 @@ export const imageProcessMiddleware = async (req, res, next) => {
                 withoutEnlargement: true // Não amplia imagens pequenas
             })
             .webp({ quality: 80 }) // Converte para webp limpando metadados EXIF
-            .toFile(outputPath);
+            .toBuffer();
 
-        // 4. Anexar o nome gerado ao req para o controller
+        // 4. Salvar permanentemente no MongoDB GridFS
+        await ProfileImageService.uploadProfileImage(safeFilename, webpBuffer, 'image/webp');
+
+        // Cache local opcional em disco
+        try {
+            const outputPath = path.join(uploadDir, safeFilename);
+            await fs.promises.writeFile(outputPath, webpBuffer);
+        } catch (diskErr) {
+            // Em ambientes efêmeros sem gravação em disco, o GridFS já é a fonte definitiva
+        }
+
+        // 5. Anexar o nome gerado ao req para o controller
         req.file.filename = safeFilename;
 
         next();

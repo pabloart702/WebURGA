@@ -125,7 +125,7 @@ class UserService {
         user.profilePicture = null;
         await user.save();
 
-        deleteProfileImage(oldPicture);
+        await deleteProfileImage(oldPicture);
 
         return user;
     }
@@ -136,7 +136,7 @@ class UserService {
 
         const updatedUser = await UserRepository.update(id, { profilePicture: filename });
 
-        deleteProfileImage(oldPicture);
+        await deleteProfileImage(oldPicture);
 
         return updatedUser;
     }
