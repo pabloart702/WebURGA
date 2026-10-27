@@ -1,6 +1,7 @@
 import { body, checkExact } from 'express-validator';
 import { UNIDADES_POLICIAIS_VALIDAS } from '../Constants/unidades.js';
 import { cpf } from 'cpf-cnpj-validator';
+import { formatNomeProprio } from '../Utils/sanitizers.js';
 
 export const createUserValidator = [
     body('nome')
@@ -10,7 +11,8 @@ export const createUserValidator = [
         .bail()
         .trim()
         .isLength({ min: 6, max: 100 }).withMessage('O nome deve ter entre 6 e 100 carateres')
-        .isAlpha('pt-BR', { ignore: ' ' }).withMessage('O nome deve conter apenas letras'),
+        .isAlpha('pt-BR', { ignore: ' ' }).withMessage('O nome deve conter apenas letras')
+        .customSanitizer(formatNomeProprio),
 
     body('email')
         .notEmpty().withMessage('O email é obrigatório')
@@ -90,7 +92,8 @@ export const updateUserValidator = [
         .bail()
         .trim()
         .isLength({ min: 6, max: 100 }).withMessage('O nome deve ter entre 6 e 100 carateres')
-        .isAlpha('pt-BR', { ignore: ' ' }).withMessage('O nome deve conter apenas letras'),
+        .isAlpha('pt-BR', { ignore: ' ' }).withMessage('O nome deve conter apenas letras')
+        .customSanitizer(formatNomeProprio),
 
     body('email')
         .optional()
@@ -165,7 +168,8 @@ export const updateProfileValidator = [
         .bail()
         .trim()
         .isLength({ min: 6, max: 100 }).withMessage('O nome deve ter entre 6 e 100 carateres')
-        .isAlpha('pt-BR', { ignore: ' ' }).withMessage('O nome deve conter apenas letras'),
+        .isAlpha('pt-BR', { ignore: ' ' }).withMessage('O nome deve conter apenas letras')
+        .customSanitizer(formatNomeProprio),
 
     body('email')
         .optional()

@@ -9,6 +9,7 @@ describe('User Repository Tests', () => {
 
   it('deve listar usuários (findAll) com paginação e busca', async () => {
     const mockFind = {
+      sort: jest.fn().mockReturnThis(),
       skip: jest.fn().mockReturnThis(),
       limit: jest.fn().mockResolvedValue([{ nome: 'Maria' }])
     };
@@ -18,6 +19,7 @@ describe('User Repository Tests', () => {
     const result = await userRepository.findAll(1, 'Maria', 'TI');
     
     expect(User.find).toHaveBeenCalled();
+    expect(mockFind.sort).toHaveBeenCalledWith({ nome: 1 });
     expect(mockFind.skip).toHaveBeenCalledWith(0);
     expect(mockFind.limit).toHaveBeenCalledWith(50);
     expect(result.data).toHaveLength(1);

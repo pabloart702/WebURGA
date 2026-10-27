@@ -1,9 +1,11 @@
 import mongoose from 'mongoose';
+import { formatNomeProprio } from '../Utils/sanitizers.js';
 
 const userSchema = new mongoose.Schema({
     nome: {
         type: String,
-        required: [true, 'O campo nome é obrigatório.']
+        required: [true, 'O campo nome é obrigatório.'],
+        set: formatNomeProprio
     },
     email: {
         type: String,
@@ -47,6 +49,8 @@ const userSchema = new mongoose.Schema({
 }, {
     timestamps: true // Cria createdAt e updatedAt automaticamente
 });
+
+userSchema.index({ nome: 1 });
 
 // Exporta o Model compilado
 export default mongoose.model('User', userSchema);

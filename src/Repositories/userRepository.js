@@ -21,7 +21,10 @@ class UserRepository {
             ];
         }
 
-        const data = await User.find(query).skip(skip).limit(limit);
+        const data = await User.find(query)
+            .sort({ nome: 1 })
+            .skip(skip)
+            .limit(limit);
         const totalItems = await User.countDocuments(query);
         const totalPages = Math.ceil(totalItems / limit);
 

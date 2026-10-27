@@ -1,7 +1,9 @@
+import { formatNomeProprio } from '../Utils/sanitizers.js';
+
 class InputUserDTO {
     constructor(payload) {
 
-        this.nome = payload.nome;
+        this.nome = payload.nome !== undefined ? formatNomeProprio(payload.nome) : payload.nome;
         this.email = payload.email;
         this.password = payload.password;
         this.cpf = payload.cpf;
@@ -16,7 +18,7 @@ class InputUserDTO {
 
 class AdminUpdateUserDTO {
     constructor(payload) {
-        if (payload.nome !== undefined) this.nome = payload.nome;
+        if (payload.nome !== undefined) this.nome = formatNomeProprio(payload.nome);
         if (payload.email !== undefined) this.email = payload.email;
         if (payload.password !== undefined) this.password = payload.password;
         if (payload.cargo !== undefined) this.cargo = payload.cargo;
@@ -30,7 +32,7 @@ class AdminUpdateUserDTO {
 
 class ProfileUpdateDTO {
     constructor(payload) {
-        if (payload.nome !== undefined) this.nome = payload.nome;
+        if (payload.nome !== undefined) this.nome = formatNomeProprio(payload.nome);
         if (payload.email !== undefined) this.email = payload.email;
         if (payload.password !== undefined) this.password = payload.password;
         if (payload.cargo !== undefined) this.cargo = payload.cargo;
