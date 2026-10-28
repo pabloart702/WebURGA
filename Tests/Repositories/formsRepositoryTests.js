@@ -44,14 +44,14 @@ describe('Forms Repository Tests', () => {
   it('deve atualizar formulário (update)', async () => {
     jest.spyOn(Forms, 'findByIdAndUpdate').mockResolvedValue({ operacao: 'Op 2' });
     const result = await formsRepository.update('123', { operacao: 'Op 2' });
-    expect(Forms.findByIdAndUpdate).toHaveBeenCalledWith('123', { operacao: 'Op 2' }, { new: true, runValidators: true });
+    expect(Forms.findByIdAndUpdate).toHaveBeenCalledWith('123', { operacao: 'Op 2' }, { returnDocument: 'after', runValidators: true });
     expect(result.operacao).toBe('Op 2');
   });
 
   it('deve cancelar formulário, também conhecido como remover (remove)', async () => {
     jest.spyOn(Forms, 'findByIdAndUpdate').mockResolvedValue({ status: 'cancelado' });
     const result = await formsRepository.remove('123');
-    expect(Forms.findByIdAndUpdate).toHaveBeenCalledWith('123', { status: 'cancelado' }, { new: true });
+    expect(Forms.findByIdAndUpdate).toHaveBeenCalledWith('123', { status: 'cancelado' }, { returnDocument: 'after' });
     expect(result.status).toBe('cancelado');
   });
 

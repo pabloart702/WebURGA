@@ -30,11 +30,11 @@ class FormsRepository {
     }
 
     static async update(id, updateData) {
-        return await Forms.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
+        return await Forms.findByIdAndUpdate(id, updateData, { returnDocument: 'after', runValidators: true });
     }
 
     static async remove(id) {
-        return await Forms.findByIdAndUpdate(id, { status: 'cancelado' }, { new: true });
+        return await Forms.findByIdAndUpdate(id, { status: 'cancelado' }, { returnDocument: 'after' });
     }
 
     static async getDashboardMetrics() {

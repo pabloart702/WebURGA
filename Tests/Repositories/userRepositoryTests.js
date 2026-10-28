@@ -73,21 +73,21 @@ describe('User Repository Tests', () => {
   it('deve atualizar um usuário (update)', async () => {
     jest.spyOn(User, 'findByIdAndUpdate').mockResolvedValue({ nome: 'Usuário Atualizado' });
     const result = await userRepository.update('123', { nome: 'Usuário Atualizado' });
-    expect(User.findByIdAndUpdate).toHaveBeenCalledWith('123', { nome: 'Usuário Atualizado' }, { new: true });
+    expect(User.findByIdAndUpdate).toHaveBeenCalledWith('123', { nome: 'Usuário Atualizado' }, { returnDocument: 'after' });
     expect(result.nome).toBe('Usuário Atualizado');
   });
 
   it('deve desativar um usuário (delete)', async () => {
     jest.spyOn(User, 'findByIdAndUpdate').mockResolvedValue({ status: 'Inativo' });
     const result = await userRepository.delete('123');
-    expect(User.findByIdAndUpdate).toHaveBeenCalledWith('123', { status: 'Inativo' }, { new: true });
+    expect(User.findByIdAndUpdate).toHaveBeenCalledWith('123', { status: 'Inativo' }, { returnDocument: 'after' });
     expect(result.status).toBe('Inativo');
   });
 
   it('deve ativar um usuário (activate)', async () => {
     jest.spyOn(User, 'findByIdAndUpdate').mockResolvedValue({ status: 'Ativo' });
     const result = await userRepository.activate('123');
-    expect(User.findByIdAndUpdate).toHaveBeenCalledWith('123', { status: 'Ativo' }, { new: true });
+    expect(User.findByIdAndUpdate).toHaveBeenCalledWith('123', { status: 'Ativo' }, { returnDocument: 'after' });
     expect(result.status).toBe('Ativo');
   });
 });

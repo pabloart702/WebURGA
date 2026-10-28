@@ -63,14 +63,14 @@ class UserRepository {
     }
 
     static async update(id, userData) {
-        return await User.findByIdAndUpdate(id, userData, { new: true });
+        return await User.findByIdAndUpdate(id, userData, { returnDocument: 'after' });
     }
 
     static async delete(id) {
         return await User.findByIdAndUpdate(
             id,
             { status: "Inativo" },
-            { new: true }
+            { returnDocument: 'after' }
         );
     }
 
@@ -78,7 +78,7 @@ class UserRepository {
         return await User.findByIdAndUpdate(
             id,
             { status: "Ativo" },
-            { new: true }
+            { returnDocument: 'after' }
         );
     }
 }
